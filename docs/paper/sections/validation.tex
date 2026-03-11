@@ -1,0 +1,61 @@
+\section{Simulation Validation}
+\label{sec:validation}
+
+The approximation was validated against discrete-event simulation of the two-queue FJ system (2\,M jobs per scenario, 100\,K warmup). Results across a range of heterogeneity levels ($\mu_2/\mu_1$ from 1 to 5) and loads ($\rho_1$ from 0.3 to 0.9) are shown in Table~\ref{tab:results}.
+
+\begin{table}[ht]
+\centering
+\caption{Approximation vs.\ simulation for heterogeneous fork-join ($n=2$).}
+\label{tab:results}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}ccccccccc@{}}
+\toprule
+$\mu_1$ & $\mu_2$ & $\lambda$ & $\rho_1$ & $\Tbot$ & $T_{\text{sim}}$ & $T_{\text{approx}}$ & $\Tub$ & Error \\
+\midrule
+1.0 & 1.0 & 0.3 & 0.30 & 1.429 & 2.090 & 2.089 & 2.143 & $-0.05$\% \\
+1.0 & 1.0 & 0.6 & 0.60 & 2.500 & 3.564 & 3.563 & 3.750 & $-0.04$\% \\
+1.0 & 1.0 & 0.9 & 0.90 & 10.00 & 13.82 & 13.88 & 15.00 & $+0.42$\% \\
+\midrule
+1.0 & 1.5 & 0.3 & 0.30 & 1.429 & 1.707 & 1.716 & 1.736 & $+0.55$\% \\
+1.0 & 1.5 & 0.6 & 0.60 & 2.500 & 2.765 & 2.799 & 2.842 & $+1.22$\% \\
+1.0 & 1.5 & 0.9 & 0.90 & 10.00 & 10.01 & 10.19 & 10.24 & $+1.82$\% \\
+\midrule
+1.0 & 2.0 & 0.3 & 0.30 & 1.429 & 1.584 & 1.591 & 1.600 & $+0.42$\% \\
+1.0 & 2.0 & 0.6 & 0.60 & 2.500 & 2.621 & 2.641 & 2.659 & $+0.75$\% \\
+1.0 & 2.0 & 0.9 & 0.90 & 10.00 & 9.918 & 10.06 & 10.08 & $+1.46$\% \\
+\midrule
+1.0 & 3.0 & 0.3 & 0.30 & 1.429 & 1.498 & 1.501 & 1.505 & $+0.18$\% \\
+1.0 & 3.0 & 0.6 & 0.60 & 2.500 & 2.545 & 2.554 & 2.560 & $+0.34$\% \\
+1.0 & 3.0 & 0.9 & 0.90 & 10.00 & 9.886 & 10.02 & 10.02 & $+1.34$\% \\
+\midrule
+1.0 & 5.0 & 0.3 & 0.30 & 1.429 & 1.455 & 1.455 & 1.456 & $+0.03$\% \\
+1.0 & 5.0 & 0.6 & 0.60 & 2.500 & 2.513 & 2.517 & 2.519 & $+0.17$\% \\
+1.0 & 5.0 & 0.9 & 0.90 & 10.00 & 9.876 & 10.01 & 10.01 & $+1.31$\% \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Key observations:
+\begin{itemize}
+\item The approximation is \textbf{exact} for the homogeneous case (errors $< 0.05$\% at low/moderate load, $< 0.5$\% at high load due to simulation noise).
+\item For heterogeneous cases, the error is consistently \textbf{positive} (slight overestimation), staying within $+2$\% across all tested scenarios.
+\item The largest error occurs at moderate heterogeneity ($\mu_2/\mu_1 \approx 1.5$) under heavy load ($\rho_1 = 0.9$), reaching $+1.8$\%.
+\item For strong heterogeneity ($\mu_2/\mu_1 \geq 3$), errors are small because $\Tub$ and $\Tbot$ converge (the bottleneck dominates).
+\end{itemize}
+
+Figure~\ref{fig:vs-load} shows the approximation, bounds, and simulation results as a function of load for a heterogeneous system with $\mu_1 = 1.0$, $\mu_2 = 2.0$. Figure~\ref{fig:vs-hetero} shows the same quantities as a function of the heterogeneity ratio $\mu_2/\mu_1$ at fixed load $\lambda = 0.6$.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/response_time_vs_load.png}
+\caption{Mean response time vs.\ load ($\lambda/\min(\mu_1,\mu_2)$) for $\mu_1=1.0$, $\mu_2=2.0$.}
+\label{fig:vs-load}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/response_time_vs_heterogeneity.png}
+\caption{Mean response time vs.\ heterogeneity ratio ($\mu_2/\mu_1$) for $\mu_1=1.0$, $\lambda=0.6$.}
+\label{fig:vs-hetero}
+\end{figure}

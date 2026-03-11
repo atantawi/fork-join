@@ -1,0 +1,27 @@
+\section{Introduction}
+\label{sec:intro}
+
+Consider a fork-join (FJ) queueing system with two parallel servers having service rates $\mu_1$ and $\mu_2$. Jobs arrive as a Poisson process with rate $\lambda$. Each arriving job forks into two tasks, one dispatched to each server; the job completes (joins) only when \emph{both} tasks have finished service. Each server operates as an independent M/M/1 queue with FCFS discipline.
+
+The primary performance measure is the mean job response time:
+\begin{equation}
+T = \E[\max(R_1, R_2)],
+\end{equation}
+where $R_i$ is the sojourn time of the task at server $i$. The system is stable when $\lambda < \min(\mu_1, \mu_2)$.
+
+For the \emph{homogeneous} case ($\mu_1 = \mu_2 = \mu$), Nelson and Tantawi~\citep{Nelson1988} derived the exact result:
+\begin{equation}
+\label{eq:nelson-tantawi}
+T_2^{\text{hom}} = \frac{12 - \rho}{8(\mu - \lambda)} = \frac{12 - \rho}{8} \cdot T_1,
+\end{equation}
+where $\rho = \lambda/\mu$ and $T_1 = 1/(\mu - \lambda)$ is the M/M/1 mean sojourn time.
+
+For \emph{heterogeneous} servers ($\mu_1 \neq \mu_2$), no closed-form expression for $T$ is known. Flatto and Hahn~\citep{Flatto1984,Flatto1985} obtained the exact generating function via elliptic function parametrization, but extracting moments requires solving boundary value problems. Various bounds have been established~\citep{Baccelli1989,Ko2004,Kemper2012,Rizk2015}, but none yield a simple evaluable expression.
+
+In this paper, we propose a closed-form approximation that:
+\begin{enumerate}
+\item is exact for the homogeneous case,
+\item satisfies known upper and lower bounds,
+\item has correct light-traffic and heavy-traffic limits, and
+\item agrees with simulation to within 2\%.
+\end{enumerate}

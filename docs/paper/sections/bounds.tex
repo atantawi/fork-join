@@ -1,0 +1,43 @@
+\section{Bounds}
+\label{sec:bounds}
+
+We use the notation $\rho_i = \lambda/\mu_i$ for the utilization of server $i$ and $T_i = 1/(\mu_i - \lambda)$ for the mean M/M/1 sojourn time at server~$i$.
+
+\subsection{Independent Upper Bound}
+
+If the sojourn times $R_1$ and $R_2$ were independent---each exponentially distributed with rate $\mu_i - \lambda$---then:
+\begin{equation}
+\label{eq:tub}
+\Tub = \frac{1}{\mu_1 - \lambda} + \frac{1}{\mu_2 - \lambda} - \frac{1}{\mu_1 + \mu_2 - 2\lambda}.
+\end{equation}
+In reality, $R_1$ and $R_2$ are positively correlated (shared Poisson arrivals), which reduces $\E[\max(R_1, R_2)]$ below the independent case. Hence $T \leq \Tub$~\citep{Baccelli1989}.
+
+\subsection{Bottleneck Lower Bound}
+
+By Jensen's inequality (max is convex):
+\begin{equation}
+\label{eq:tbot}
+\Tbot = \max(T_1, T_2) = \max\!\left(\frac{1}{\mu_1 - \lambda},\; \frac{1}{\mu_2 - \lambda}\right) \leq T.
+\end{equation}
+
+\subsection{Split-Merge Upper Bound}
+
+A split-merge system forces servers to synchronize after each job, making it an upper bound on fork-join~\citep{Varki2001}. Treating $\max(S_1, S_2)$ as the effective service time of an M/G/1 queue, the Pollaczek--Khinchine formula gives:
+\begin{equation}
+\label{eq:tsm}
+\Tsm = \E[\Smax] + \frac{\lambda\, \E[\Smax^2]}{2(1 - \lambda\, \E[\Smax])},
+\end{equation}
+where for independent $S_i \sim \text{Exp}(\mu_i)$:
+\begin{align}
+\E[\Smax] &= \frac{1}{\mu_1} + \frac{1}{\mu_2} - \frac{1}{\mu_1 + \mu_2}, \\
+\E[\Smax^2] &= \frac{2}{\mu_1^2} + \frac{2}{\mu_2^2} - \frac{2}{(\mu_1 + \mu_2)^2}.
+\end{align}
+This bound requires $\lambda\, \E[\Smax] < 1$, which is more restrictive than the FJ stability condition.
+
+\subsection{Summary of Bounds}
+
+For all stable parameters:
+\begin{equation}
+\Tbot \;\leq\; T \;\leq\; \Tub.
+\end{equation}
+The split-merge bound $T \leq \Tsm$ also holds when $\lambda\, \E[\Smax] < 1$.
