@@ -6,3 +6,8 @@ build/
 .venv/
 .claude/
 claude-contexts/
+*.aux
+*.bbl
+*.blg
+*.log
+*.out

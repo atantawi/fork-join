@@ -1,0 +1,41 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Intuition}
+
+The interpolation weight $\alpha = \bar{\rho}/4$ captures the effect of queueing correlation. At low load, tasks rarely queue, so their sojourn times are nearly independent and the upper bound is tight. As load increases, tasks experience correlated waiting due to the shared arrival stream, which reduces the synchronization overhead and pulls the response time toward the bottleneck.
+
+The factor of $1/4$ in $\alpha$ is inherited from the homogeneous case analysis. In the homogeneous setting, the synchronization delay is $\text{Sync} = (4-\rho)/[8(\mu-\lambda)]$~\citep{Nelson1988}, and the independent synchronization delay would be $1/[2(\mu-\lambda)]$. Their ratio at $\rho = 1$ determines the interpolation scaling.
+
+\subsection{Comparison with Other Approaches}
+
+Table~\ref{tab:comparison} summarizes existing approaches for fork-join response time analysis.
+
+\begin{table}[ht]
+\centering
+\caption{Comparison of approaches for fork-join mean response time.}
+\label{tab:comparison}
+\begin{tabular}{@{}llcc@{}}
+\toprule
+Approach & Type & Closed-form? & Heterogeneous? \\
+\midrule
+Nelson--Tantawi~\citep{Nelson1988} & Approximation & Yes & No \\
+Flatto--Hahn~\citep{Flatto1984,Flatto1985} & Exact (gen.\ func.) & No & Yes \\
+Ko--Serfozo~\citep{Ko2004} & Bounds & Semi & Yes \\
+Kemper--Mandjes~\citep{Kemper2012} & Bounds + heavy traffic & Semi & Yes \\
+Rizk et al.~\citep{Rizk2015} & Distributional bounds & Semi & Yes \\
+Varki~\citep{Varki2001} & Split-merge (M/G/1) & Yes & Yes (UB for FJ) \\
+\textbf{This work} & \textbf{Interpolation approx.} & \textbf{Yes} & \textbf{Yes} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Our approximation fills a gap: it is the only directly evaluable closed-form expression for heterogeneous fork-join (not split-merge) that is exact in the homogeneous limit and respects known bounds.
+
+\subsection{Limitations}
+
+\begin{itemize}
+\item The formula is a heuristic approximation, not an exact result. The weight $\alpha = \bar{\rho}/4$ is a natural generalization from the homogeneous case but is not derived from first principles for the heterogeneous setting.
+\item The approximation consistently overestimates the true response time by up to ${\sim}2$\%, with the largest errors at moderate heterogeneity ($\mu_2/\mu_1 \approx 1.5$) under heavy load. This suggests the correlation correction could be slightly stronger in the heterogeneous case.
+\item Further validation against numerical inversion of the Flatto--Hahn generating function could provide exact reference values for calibration.
+\end{itemize}
