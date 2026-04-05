@@ -11,3 +11,4 @@ claude-contexts/
 *.blg
 *.log
 *.out
+.DS_Store

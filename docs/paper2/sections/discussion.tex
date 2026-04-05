@@ -1,0 +1,95 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Relationship Between the Two Approximations}
+
+The two approximations have different theoretical foundations yet share the
+same two anchor points: both are exact in the homogeneous case and have the
+correct heavy-traffic singularity.
+
+$\Tul$ works by confining the approximation within the known bounds.
+Its interpolation weight $\alpha = (\rho_1+\rho_2)/8$ has a natural
+interpretation: it is one-quarter of the average utilization, calibrated
+to reproduce the Nelson--Tantawi formula at $r = 1$.
+By construction, $0 \leq \alpha \leq 1/4$, so $\Tul$ always lies between
+the bounds.
+
+$\Tlh$ works from a different direction: it constructs a rational function
+that matches the system's known asymptotic behavior at both traffic extremes.
+The heavy-traffic factor $h(r) = 1 + \tfrac{3}{8}r^{-\beta}$ captures the
+physical transition from a regime where both servers jointly saturate
+($r = 1$, $h = 11/8$) to a regime where only the bottleneck server saturates
+($r \to \infty$, $h \to 1$).
+The sharpness of this transition---$h \approx 1$ already at $r = 1.5$---reflects
+the fact that even modest heterogeneity is sufficient to break the joint
+saturation and transfer the heavy-load correlation penalty to the bottleneck
+alone.
+
+\subsection{Comparison with Prior Work}
+
+Table~\ref{tab:comparison} situates the two new approximations within the
+existing literature.
+
+\begin{table}[ht]
+\centering
+\caption{Comparison of methods for fork-join mean response time ($n = 2$).}
+\label{tab:comparison}
+\begin{tabular}{@{}lllcc@{}}
+\toprule
+Reference & Type & Closed-form? & Exact (hom.)? & Heterogeneous? \\
+\midrule
+Nelson--Tantawi~\citep{Nelson1988} & Approx.\ (hom.\ only) & Yes & Yes & No \\
+Flatto--Hahn~\citep{Flatto1984,Flatto1985} & Exact (gen.\ func.) & No & Yes & Yes \\
+Baccelli et al.~\citep{Baccelli1989} & Bounds & Partial & No & Yes \\
+Varma--Makowski~\citep{Varma1994} & LH interp.\ (hom.) & Yes & Yes & No \\
+Kemper--Mandjes~\citep{Kemper2012} & Bounds + asymptotics & Partial & No & Yes \\
+Rizk et al.~\citep{Rizk2015} & Distributional bounds & No & No & Yes \\
+Mohanty et al.~\citep{Mohanty2024} & Bounds ($(k,k)$ FJ) & Partial & No & Yes \\
+\textbf{This work ($\Tul$)} & Bound interpolation & \textbf{Yes} & \textbf{Yes} & \textbf{Yes} \\
+\textbf{This work ($\Tlh$)} & LH traffic interp. & \textbf{Yes} & \textbf{Yes} & \textbf{Yes} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Varma and Makowski~\citep{Varma1994} applied the Reiman--Simon framework to
+the \emph{symmetric} ($\mu_1 = \mu_2$) fork-join queue with $n \geq 2$ servers,
+showing that the light-heavy traffic interpolation recovers the exact
+Nelson--Tantawi formula for $n = 2$.
+Our $\Tlh$ extends this to the heterogeneous case through the $h(r)$ factor,
+while $\Tul$ provides an alternative route via direct bound interpolation.
+
+\subsection{Accuracy and Limitations}
+
+$\Tul$ provides consistently small, positive errors ($\leq 1.2\%$) and is
+guaranteed to lie within the bounds.
+Its main limitation is that the weight $\alpha = (\rho_1+\rho_2)/8$ is
+derived from the homogeneous case and may not optimally represent the
+correlation structure at intermediate heterogeneity levels.
+
+$\Tlh$ provides a tighter fit near homogeneity but has larger errors ($\leq 2.4\%$)
+at the transition regime ($r \approx 1.5$, heavy load), where the linear
+numerator has insufficient flexibility to capture the joint dependence on
+both $r$ and $\rho$.
+Its parameter $\beta$ has been calibrated to $10$ from available simulation
+data; a more systematic calibration over a finer grid of $(r, \rho)$ values
+could refine this estimate.
+The Reiman--Simon framework also supports a quadratic numerator (matching the
+first light-traffic derivative $f'(0)$ as well), which would add one more
+degree of freedom and could reduce errors in the transition regime.
+
+\subsection{Recommendations}
+
+For practical use:
+\begin{itemize}
+\item Use $\Tul$ when a guaranteed bound is required or when high heterogeneity
+      ($r \geq 2$) is expected. It is simpler (no free parameters) and
+      uniformly accurate.
+\item Use $\Tlh$ when theoretical grounding in the Reiman--Simon framework is
+      important, or when the system is nearly homogeneous and the tighter
+      accuracy at low-to-moderate heterogeneity is valued.
+\item Both methods should be used together as a consistency check: agreement
+      between $\Tul$ and $\Tlh$ provides confidence in the estimate;
+      significant disagreement signals a regime where further analysis
+      (e.g., simulation or numerical inversion of the Flatto--Hahn generating
+      function) is warranted.
+\end{itemize}

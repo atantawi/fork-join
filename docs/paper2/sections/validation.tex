@@ -1,0 +1,89 @@
+\section{Simulation Validation}
+\label{sec:validation}
+
+Both approximations were validated against discrete-event simulation of the
+two-queue fork-join system.
+Each scenario used 2\,M jobs with a 100\,K-job warmup period and a fixed
+random seed for reproducibility.
+Results for $\Tul$~\eqref{eq:tul} and $\Tlh$~\eqref{eq:tlh} (with $\beta = 10$)
+are shown in Table~\ref{tab:results} alongside the theoretical bounds.
+
+\begin{table}[ht]
+\centering
+\caption{Approximations vs.\ simulation for heterogeneous two-queue fork-join.
+         Errors are $(T_{\text{approx}} - \Tsim)/\Tsim \times 100\%$.}
+\label{tab:results}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}cccccccccc@{}}
+\toprule
+$\mu_1$ & $\mu_2$ & $\lambda$ & $\rho_2$ & $\Tbot$
+        & $\Tsim$ & $\Tul$ & Err & $\Tlh$ & Err \\
+\midrule
+1.0 & 1.0 & 0.3 & 0.30 & 1.429 & 2.088 & 2.089 & $+0.06\%$ & 2.089 & $+0.06\%$ \\
+1.0 & 1.0 & 0.6 & 0.60 & 2.500 & 3.564 & 3.562 & $-0.04\%$ & 3.562 & $-0.04\%$ \\
+1.0 & 1.0 & 0.9 & 0.90 & 10.00 & 13.89 & 13.88 & $-0.08\%$ & 13.88 & $-0.08\%$ \\
+\midrule
+1.0 & 1.5 & 0.3 & 0.20 & 1.429 & 1.705 & 1.716 & $+0.67\%$ & 1.698 & $-0.41\%$ \\
+1.0 & 1.5 & 0.6 & 0.40 & 2.500 & 2.767 & 2.799 & $+1.16\%$ & 2.776 & $+0.34\%$ \\
+1.0 & 1.5 & 0.9 & 0.60 & 10.00 & 10.08 & 10.19 & $+1.10\%$ & 10.33 & $+2.40\%$ \\
+\midrule
+1.0 & 2.0 & 0.3 & 0.15 & 1.429 & 1.582 & 1.590 & $+0.54\%$ & 1.595 & $+0.85\%$ \\
+1.0 & 2.0 & 0.6 & 0.30 & 2.500 & 2.623 & 2.641 & $+0.68\%$ & 2.667 & $+1.69\%$ \\
+1.0 & 2.0 & 0.9 & 0.45 & 10.00 & 9.990 & 10.06 & $+0.73\%$ & 10.17 & $+1.80\%$ \\
+\midrule
+1.0 & 3.0 & 0.6 & 0.20 & 2.500 & 2.546 & 2.554 & $+0.30\%$ & 2.583 & $+1.47\%$ \\
+1.0 & 5.0 & 0.6 & 0.12 & 2.500 & 2.514 & 2.517 & $+0.11\%$ & 2.533 & $+0.77\%$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\paragraph{Homogeneous case ($\mu_1 = \mu_2 = 1.0$).}
+Both approximations are essentially exact, with errors below $0.1\%$.
+The residual error is attributable to finite simulation variance.
+This confirms that both methods correctly recover the Nelson--Tantawi
+formula~\eqref{eq:nelson-tantawi} by construction.
+
+\paragraph{Moderate heterogeneity ($r = 1.5$).}
+$\Tul$ shows consistent positive errors ($+0.67\%$ to $+1.16\%$) across all
+loads.
+$\Tlh$ is more accurate at low and moderate load, but reaches its largest
+error of $+2.40\%$ at heavy load ($\rho_2 = 0.6$).
+This worst case for $\Tlh$ arises in the regime where the system is near
+the boundary between homogeneous and heterogeneous behavior, where the
+linear Reiman--Simon numerator has the least flexibility.
+
+\paragraph{High heterogeneity ($r \geq 2$).}
+$\Tul$ errors fall below $0.75\%$ and improve further as $r$ increases
+($\leq 0.11\%$ at $r = 5$).
+$\Tlh$ errors are slightly larger (up to $+1.80\%$ at $r = 2$) because
+the residual correction in $h(r)$ provides a small but non-negligible
+contribution even at these heterogeneity levels.
+As $r \to \infty$, both approximations converge to $\Tbot$.
+
+Figure~\ref{fig:vs-load} plots the two approximations, bounds, and simulation
+as functions of load for $\mu_1 = 1.0$, $\mu_2 = 2.0$.
+Both $\Tul$ and $\Tlh$ track the simulation closely across the full load
+range, lying between the theoretical bounds.
+Figure~\ref{fig:vs-hetero} shows the same quantities as a function of
+the heterogeneity ratio $\mu_2/\mu_1$ at fixed $\lambda = 0.6$.
+Near homogeneity ($r \approx 1$), $\Tlh$ is more accurate; for $r \geq 3$,
+$\Tul$ is slightly tighter.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/response_time_vs_load.png}
+\caption{Mean response time vs.\ load $\lambda/\mumin$ for $\mu_1 = 1.0$,
+         $\mu_2 = 2.0$.
+         Markers: simulation. Lines: approximations and bounds.}
+\label{fig:vs-load}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/response_time_vs_heterogeneity.png}
+\caption{Mean response time vs.\ heterogeneity ratio $\mu_2/\mu_1$ for
+         $\mu_1 = 1.0$, $\lambda = 0.6$.
+         Markers: simulation. Lines: approximations and bounds.}
+\label{fig:vs-hetero}
+\end{figure}
