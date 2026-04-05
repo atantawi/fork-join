@@ -5,6 +5,7 @@ dist/
 build/
 .venv/
 .claude/
+.bob/
 claude-contexts/
 *.aux
 *.bbl
