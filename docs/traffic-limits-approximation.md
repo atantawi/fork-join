@@ -29,7 +29,7 @@ Two simple bounds bracket the true response time:
 
 ## 3. The Reiman-Simon Framework
 
-Following Section 2.1 of the QC/HPC Resource Allocation paper (Squillante and Tantawi), we approximate $T(\lambda)$ with a rational function of the bottleneck utilization $\rho = \lambda/\mu_{\min}$:
+Following Appendix A of the QC/HPC Resource Allocation paper (Squillante and Tantawi), we approximate $T(\lambda)$ with a rational function of the bottleneck utilization $\rho = \lambda/\mu_{\min}$:
 
 $$\tilde{T}(\rho) = \frac{a_0 + a_1 \rho}{\mu_{\min}(1 - \rho)}$$
 
@@ -195,4 +195,4 @@ A perturbation analysis of the Flatto-Hahn generating function near $r = 1$ coul
 - Nelson, R. and Tantawi, A.N. (1988). "Approximate analysis of fork/join synchronization in parallel queues." *IEEE Transactions on Computers*, 37(6), 739–743.
 - Flatto, L. and Hahn, S. (1984). "Two parallel queues created by arrivals with two demands I." *SIAM Journal on Applied Mathematics*, 44(5), 1041–1053.
 - Reiman, M.I. and Simon, B. (1988). "Light traffic limits of sojourn time distributions in Markovian queueing networks." *Stochastic Models*, 4(2), 191–233.
-- Squillante, M. and Tantawi, A.N. (2026). "QC/HPC Resource Allocation/Scheduling." Technical report. Section 2.1.
+- Squillante, M. and Tantawi, A.N. (2026). "QC/HPC Resource Allocation/Scheduling." Technical report. Appendix A.

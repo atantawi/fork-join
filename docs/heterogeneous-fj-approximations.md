@@ -112,7 +112,7 @@ $$\boxed{T_{\text{UL}} = \left(1 - \frac{\rho_1+\rho_2}{8}\right) T_{\text{UB}} 
 
 ### 5.1 Strategy: The Reiman-Simon Framework
 
-Following the methodology developed by Reiman and Simon [4] and described in [5, §2.1], we approximate $T(\lambda)$ as a rational function in the bottleneck utilization $\rho = \lambda/\mu_{\min}$:
+Following the methodology developed by Reiman and Simon [4] and described in [5, Appendix A], we approximate $T(\lambda)$ as a rational function in the bottleneck utilization $\rho = \lambda/\mu_{\min}$:
 
 $$\tilde{T}(\rho) = \frac{a_0 + a_1\,\rho}{\mu_{\min}(1 - \rho)}$$
 
@@ -285,6 +285,6 @@ Both methods extend naturally to larger systems:
 
 [4] M. I. Reiman and B. Simon, "Light traffic limits of sojourn time distributions in Markovian queueing networks," *Stochastic Models*, vol. 4, no. 2, pp. 191–233, 1988.
 
-[5] M. Squillante and A. N. Tantawi, "QC/HPC Resource Allocation/Scheduling," Technical Report, January 2026. (Section 2.1.)
+[5] M. Squillante and A. N. Tantawi, "QC/HPC Resource Allocation/Scheduling," Technical Report, January 2026. (Appendix A.)
 
 [6] S. Varma and A. M. Makowski, "Interpolation approximations for symmetric fork-join queues," *Performance Evaluation*, vol. 20, no. 1, pp. 245–265, 1994.

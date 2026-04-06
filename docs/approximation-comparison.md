@@ -94,7 +94,7 @@ This **exactly** recovers the Nelson-Tantawi result. ✓
 
 ### 4.1 Derivation Strategy
 
-Based on the methodology in Section 2.1 of the QC/HPC Resource Allocation paper (Reiman-Simon framework). Approximates $T(\lambda)$ with a rational form:
+Based on the methodology in Appendix A of the QC/HPC Resource Allocation paper (Reiman-Simon framework). Approximates $T(\lambda)$ with a rational form:
 
 $$\tilde{T}(\rho) = \frac{a_0 + a_1\rho}{\mu_{\min}(1 - \rho)}$$
 
