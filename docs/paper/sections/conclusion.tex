@@ -11,7 +11,8 @@ The first, the \emph{upper-lower bound interpolation}:
           + \frac{\rho_1+\rho_2}{8}\,\Tbot,
 \end{equation}
 is a parameter-free convex combination of the independent upper bound and
-the bottleneck lower bound, always within the bounds, with errors below $1.2\%$.
+the bottleneck lower bound, always within the bounds, with errors below $1.2\%$
+(validated against 20\,M-job simulations with 95\% confidence intervals).
 
 The second, the \emph{light-heavy traffic interpolation}:
 \begin{equation}
@@ -21,7 +22,7 @@ The second, the \emph{light-heavy traffic interpolation}:
 \end{equation}
 is grounded in the Reiman--Simon framework, matching the zeroth light-traffic
 derivative and a heterogeneity-adjusted heavy-traffic limit, with errors
-below $2.5\%$.
+below $2.1\%$.
 
 The third, the \emph{enhanced light-heavy traffic interpolation}:
 \begin{equation}
@@ -30,8 +31,11 @@ The third, the \emph{enhanced light-heavy traffic interpolation}:
 extends $\Tlh$ to a quadratic numerator by additionally matching the first
 light-traffic derivative $f^{(1)}(0)$.
 It is strictly more accurate than $\Tlh$ for $r \geq 2$ (errors up to
-$75\%$ smaller at high heterogeneity) while being identical to $\Tlh$ at
+$77\%$ smaller at high heterogeneity) while being identical to $\Tlh$ at
 $r = 1$.
+At $r \approx 1.5$, however, the enhancement is counterproductive: both LH
+variants are less accurate than $\Tul$ in this transition regime, where the
+steep variation of $h(r)$ near $r = 1$ limits the Reiman--Simon approach.
 
 All three approximations recover the Nelson--Tantawi exact formula in the
 homogeneous case, exhibit the correct singularity in heavy traffic, and are

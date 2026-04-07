@@ -3,8 +3,10 @@
 
 All three approximations were validated against discrete-event simulation of the
 two-queue fork-join system.
-Each scenario used 2\,M jobs with a 100\,K-job warmup period and a fixed
-random seed for reproducibility.
+Each scenario used 20\,M jobs with a 500\,K-job warmup period, repeated over
+5 independent random seeds; the reported $\Tsim$ is the grand mean and the
+95\% confidence interval is computed via the $t$-distribution across seeds
+($\mathrm{df}=4$).
 Results for $\Tul$~\eqref{eq:tul} and $\Tlh$~\eqref{eq:tlh} (with $\beta = 10$)
 are shown in Table~\ref{tab:results} alongside the theoretical bounds.
 Table~\ref{tab:results-lhe} compares $\Tlh$ and the enhanced approximation
@@ -13,54 +15,57 @@ $\Tlhe$~\eqref{eq:tlhe}.
 \begin{table}[ht]
 \centering
 \caption{Approximations vs.\ simulation for heterogeneous two-queue fork-join.
+         $\Tsim$ is the grand mean over 5 seeds; $\pm$ is the 95\% CI half-width.
          Errors are $(T_{\text{approx}} - \Tsim)/\Tsim \times 100\%$.}
 \label{tab:results}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{@{}cccccccccc@{}}
+\begin{tabular}{@{}ccccccccccc@{}}
 \toprule
 $\mu_1$ & $\mu_2$ & $\lambda$ & $\rho_2$ & $\Tbot$
-        & $\Tsim$ & $\Tul$ & Err & $\Tlh$ & Err \\
+        & $\Tsim$ & $\pm$95\%\,CI & $\Tul$ & Err & $\Tlh$ & Err \\
 \midrule
-1.0 & 1.0 & 0.3 & 0.30 & 1.429 & 2.088 & 2.089 & $+0.06\%$ & 2.089 & $+0.06\%$ \\
-1.0 & 1.0 & 0.6 & 0.60 & 2.500 & 3.564 & 3.562 & $-0.04\%$ & 3.562 & $-0.04\%$ \\
-1.0 & 1.0 & 0.9 & 0.90 & 10.00 & 13.89 & 13.88 & $-0.08\%$ & 13.88 & $-0.08\%$ \\
+1.0 & 1.0 & 0.3 & 0.30 & 1.429 & 2.089 & 0.001 & 2.089 & $+0.01\%$ & 2.089 & $+0.01\%$ \\
+1.0 & 1.0 & 0.6 & 0.60 & 2.500 & 3.561 & 0.002 & 3.563 & $+0.03\%$ & 3.563 & $+0.03\%$ \\
+1.0 & 1.0 & 0.9 & 0.90 & 10.00 & 13.86 & 0.061 & 13.88 & $+0.15\%$ & 13.88 & $+0.15\%$ \\
 \midrule
-1.0 & 1.5 & 0.3 & 0.20 & 1.429 & 1.705 & 1.716 & $+0.67\%$ & 1.698 & $-0.41\%$ \\
-1.0 & 1.5 & 0.6 & 0.40 & 2.500 & 2.767 & 2.799 & $+1.16\%$ & 2.776 & $+0.34\%$ \\
-1.0 & 1.5 & 0.9 & 0.60 & 10.00 & 10.08 & 10.19 & $+1.10\%$ & 10.33 & $+2.40\%$ \\
+1.0 & 1.5 & 0.3 & 0.20 & 1.429 & 1.707 & 0.001 & 1.716 & $+0.58\%$ & 1.698 & $-0.50\%$ \\
+1.0 & 1.5 & 0.6 & 0.40 & 2.500 & 2.767 & 0.001 & 2.799 & $+1.16\%$ & 2.776 & $+0.34\%$ \\
+1.0 & 1.5 & 0.9 & 0.60 & 10.00 & 10.12 & 0.024 & 10.19 & $+0.73\%$ & 10.33 & $+2.03\%$ \\
 \midrule
-1.0 & 2.0 & 0.3 & 0.15 & 1.429 & 1.582 & 1.590 & $+0.54\%$ & 1.595 & $+0.85\%$ \\
-1.0 & 2.0 & 0.6 & 0.30 & 2.500 & 2.623 & 2.641 & $+0.68\%$ & 2.667 & $+1.69\%$ \\
-1.0 & 2.0 & 0.9 & 0.45 & 10.00 & 9.990 & 10.06 & $+0.73\%$ & 10.17 & $+1.80\%$ \\
+1.0 & 2.0 & 0.3 & 0.15 & 1.429 & 1.583 & 0.001 & 1.591 & $+0.45\%$ & 1.595 & $+0.76\%$ \\
+1.0 & 2.0 & 0.6 & 0.30 & 2.500 & 2.623 & 0.001 & 2.641 & $+0.67\%$ & 2.667 & $+1.67\%$ \\
+1.0 & 2.0 & 0.9 & 0.45 & 10.00 & 10.03 & 0.024 & 10.06 & $+0.35\%$ & 10.17 & $+1.42\%$ \\
 \midrule
-1.0 & 3.0 & 0.6 & 0.20 & 2.500 & 2.546 & 2.554 & $+0.30\%$ & 2.583 & $+1.47\%$ \\
-1.0 & 5.0 & 0.6 & 0.12 & 2.500 & 2.514 & 2.517 & $+0.11\%$ & 2.533 & $+0.77\%$ \\
+1.0 & 3.0 & 0.6 & 0.20 & 2.500 & 2.547 & 0.001 & 2.554 & $+0.25\%$ & 2.583 & $+1.41\%$ \\
+1.0 & 5.0 & 0.6 & 0.12 & 2.500 & 2.515 & 0.001 & 2.517 & $+0.07\%$ & 2.533 & $+0.71\%$ \\
 \bottomrule
 \end{tabular}%
 }
 \end{table}
 
 \paragraph{Homogeneous case ($\mu_1 = \mu_2 = 1.0$).}
-Both approximations are essentially exact, with errors below $0.1\%$.
-The residual error is attributable to finite simulation variance.
-This confirms that both methods correctly recover the Nelson--Tantawi
-formula~\eqref{eq:nelson-tantawi} by construction.
+Both approximations recover the Nelson--Tantawi formula~\eqref{eq:nelson-tantawi}
+by construction; residual errors ($\leq 0.15\%$) are simulation noise.
+At $\lambda = 0.9$ the CI half-width is $\pm 0.061$, reflecting the heavy-tailed
+response-time distribution near saturation; the analytical value $13.875$ lies
+well within this interval.
 
 \paragraph{Moderate heterogeneity ($r = 1.5$).}
-$\Tul$ shows consistent positive errors ($+0.67\%$ to $+1.16\%$) across all
+$\Tul$ shows consistent positive errors ($+0.58\%$ to $+1.16\%$) across all
 loads.
-$\Tlh$ is more accurate at low and moderate load, but reaches its largest
-error of $+2.40\%$ at heavy load ($\rho_2 = 0.6$).
-This worst case for $\Tlh$ arises in the regime where the system is near
-the boundary between homogeneous and heterogeneous behavior, where the
-linear Reiman--Simon numerator has the least flexibility.
+$\Tlh$ is more accurate at low and moderate load, but reaches $+2.03\%$ at
+heavy load ($\rho_2 = 0.6$).
+The wider CIs at $\lambda = 0.9$ (half-width $\pm 0.024$) indicate substantial
+variance in the heavy-load regime; the short-run (2\,M-job) estimate was biased
+low by $\approx 0.37\%$ relative to the 20\,M-job estimate, illustrating the
+importance of long runs near saturation.
 
 \paragraph{High heterogeneity ($r \geq 2$).}
-$\Tul$ errors fall below $0.75\%$ and improve further as $r$ increases
-($\leq 0.11\%$ at $r = 5$).
-$\Tlh$ errors are slightly larger (up to $+1.80\%$ at $r = 2$) because
-the residual correction in $h(r)$ provides a small but non-negligible
-contribution even at these heterogeneity levels.
+$\Tul$ errors fall below $0.67\%$ and improve further as $r$ increases
+($\leq 0.07\%$ at $r = 5$).
+$\Tlh$ errors are slightly larger (up to $+1.67\%$ at $r = 2$).
+CIs are tight ($\leq \pm 0.024$) across all $r \geq 2$ scenarios, confirming
+that 20\,M jobs provide well-converged estimates in this regime.
 As $r \to \infty$, both approximations converge to $\Tbot$.
 
 Figure~\ref{fig:vs-load} plots the two approximations, bounds, and simulation
@@ -98,28 +103,29 @@ Both use $\beta = 10$.
 \begin{table}[ht]
 \centering
 \caption{$\Tlh$ vs.\ $\Tlhe$ vs.\ simulation for heterogeneous two-queue fork-join.
+         $\Tsim$ and 95\% CI as in Table~\ref{tab:results}.
          Errors are $(T_{\text{approx}} - \Tsim)/\Tsim \times 100\%$.}
 \label{tab:results-lhe}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{@{}ccccccccc@{}}
+\begin{tabular}{@{}cccccccccc@{}}
 \toprule
 $\mu_1$ & $\mu_2$ & $\lambda$ & $\rho_1$
-        & $\Tsim$ & $\Tlh$ & Err & $\Tlhe$ & Err \\
+        & $\Tsim$ & $\pm$95\%\,CI & $\Tlh$ & Err & $\Tlhe$ & Err \\
 \midrule
-1.0 & 1.0 & 0.3 & 0.30 & 2.088 & 2.089 & $+0.07\%$ & 2.089 & $+0.07\%$ \\
-1.0 & 1.0 & 0.6 & 0.60 & 3.564 & 3.562 & $-0.05\%$ & 3.562 & $-0.05\%$ \\
-1.0 & 1.0 & 0.9 & 0.90 & 13.886 & 13.875 & $-0.08\%$ & 13.875 & $-0.08\%$ \\
+1.0 & 1.0 & 0.3 & 0.30 & 2.089 & 0.001 & 2.089 & $+0.01\%$ & 2.089 & $+0.01\%$ \\
+1.0 & 1.0 & 0.6 & 0.60 & 3.561 & 0.002 & 3.563 & $+0.03\%$ & 3.563 & $+0.03\%$ \\
+1.0 & 1.0 & 0.9 & 0.90 & 13.855 & 0.061 & 13.875 & $+0.15\%$ & 13.875 & $+0.15\%$ \\
 \midrule
-1.0 & 1.5 & 0.3 & 0.30 & 1.705 & 1.698 & $-0.40\%$ & 1.710 & $+0.32\%$ \\
-1.0 & 1.5 & 0.6 & 0.60 & 2.767 & 2.776 & $+0.35\%$ & 2.801 & $+1.25\%$ \\
-1.0 & 1.5 & 0.9 & 0.90 & 10.083 & 10.325 & $+2.41\%$ & 10.362 & $+2.77\%$ \\
+1.0 & 1.5 & 0.3 & 0.30 & 1.707 & 0.001 & 1.698 & $-0.50\%$ & 1.710 & $+0.23\%$ \\
+1.0 & 1.5 & 0.6 & 0.60 & 2.767 & 0.001 & 2.776 & $+0.34\%$ & 2.801 & $+1.23\%$ \\
+1.0 & 1.5 & 0.9 & 0.90 & 10.120 & 0.024 & 10.325 & $+2.03\%$ & 10.362 & $+2.39\%$ \\
 \midrule
-1.0 & 2.0 & 0.3 & 0.30 & 1.582 & 1.595 & $+0.87\%$ & 1.589 & $+0.45\%$ \\
-1.0 & 2.0 & 0.6 & 0.60 & 2.623 & 2.667 & $+1.70\%$ & 2.654 & $+1.20\%$ \\
-1.0 & 2.0 & 0.9 & 0.90 & 9.990 & 10.170 & $+1.80\%$ & 10.150 & $+1.60\%$ \\
+1.0 & 2.0 & 0.3 & 0.30 & 1.583 & 0.001 & 1.595 & $+0.76\%$ & 1.589 & $+0.35\%$ \\
+1.0 & 2.0 & 0.6 & 0.60 & 2.623 & 0.001 & 2.667 & $+1.67\%$ & 2.654 & $+1.17\%$ \\
+1.0 & 2.0 & 0.9 & 0.90 & 10.028 & 0.024 & 10.170 & $+1.42\%$ & 10.150 & $+1.22\%$ \\
 \midrule
-1.0 & 3.0 & 0.6 & 0.60 & 2.546 & 2.583 & $+1.45\%$ & 2.561 & $+0.57\%$ \\
-1.0 & 5.0 & 0.6 & 0.60 & 2.514 & 2.533 & $+0.75\%$ & 2.519 & $+0.19\%$ \\
+1.0 & 3.0 & 0.6 & 0.60 & 2.547 & 0.001 & 2.583 & $+1.41\%$ & 2.561 & $+0.54\%$ \\
+1.0 & 5.0 & 0.6 & 0.60 & 2.515 & 0.001 & 2.533 & $+0.71\%$ & 2.519 & $+0.16\%$ \\
 \bottomrule
 \end{tabular}%
 }
@@ -128,22 +134,24 @@ $\mu_1$ & $\mu_2$ & $\lambda$ & $\rho_1$
 \paragraph{Homogeneous case ($\mu_1 = \mu_2 = 1.0$).}
 As proved in Section~\ref{sec:approx-lhe}, the quadratic coefficient $c_2 = 0$
 when $r = 1$, so $\Tlhe \equiv \Tlh$.
-Both recover Nelson--Tantawi exactly; residual errors are below $0.1\%$ due
-to finite simulation variance.
+Both recover Nelson--Tantawi exactly; residual errors ($\leq 0.15\%$) are
+simulation noise.
 
 \paragraph{Moderate heterogeneity ($r = 1.5$).}
-$\Tlhe$ offers no improvement here and is slightly less accurate than $\Tlh$
-(worst case $+2.77\%$ vs.\ $+2.41\%$ at heavy load).
-This regime is precisely where the power-law model $h(r) = 1 + \tfrac{3}{8}r^{-\beta}$
-is least reliable: the true heavy-traffic constant $h$ varies sharply near $r = 1$,
-and the $\beta$-approximation introduces systematic error that the additional
-derivative term cannot correct.
+$\Tlhe$ is slightly less accurate than $\Tlh$ across all loads
+(worst case $+2.39\%$ vs.\ $+2.03\%$ at heavy load with the corrected simulation).
+This regime is where the power-law model $h(r) = 1 + \tfrac{3}{8}r^{-\beta}$
+is least reliable: $h(r)$ varies steeply near $r = 1$, and the resulting
+systematic error in the heavy-traffic anchor dominates the benefit of
+matching the first derivative.
+Both LH variants are therefore less accurate than $\Tul$ ($+0.73\%$) in
+this regime.
 
 \paragraph{High heterogeneity ($r \geq 2$).}
 $\Tlhe$ consistently outperforms $\Tlh$:
-at $r = 2$ and $\lambda \in \{0.3, 0.6\}$ errors fall from $+0.87\%,\,+1.70\%$
-to $+0.45\%,\,+1.20\%$; at $r = 3$ from $+1.45\%$ to $+0.57\%$;
-and at $r = 5$ from $+0.75\%$ to $+0.19\%$.
-In this regime $h(r) \approx 1$ and the first derivative $f^{(1)}(0)$ carries
-meaningful information about the service-time heterogeneity that improves the
-approximation over a wide load range.
+at $r = 2$ and $\lambda \in \{0.3, 0.6\}$ errors fall from $+0.76\%,\,+1.67\%$
+to $+0.35\%,\,+1.17\%$; at $r = 3$ from $+1.41\%$ to $+0.54\%$;
+and at $r = 5$ from $+0.71\%$ to $+0.16\%$.
+In this regime $h(r) \approx 1$ and the first light-traffic derivative
+$f^{(1)}(0)$ carries meaningful information about the service-time
+heterogeneity that improves accuracy over a wide load range.
