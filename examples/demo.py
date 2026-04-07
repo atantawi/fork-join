@@ -7,6 +7,7 @@ import numpy as np
 from forkjoin import (
     mean_response_time,
     mean_response_time_lh,
+    mean_response_time_lh_enhanced,
     upper_bound_independent,
     lower_bound_bottleneck,
     nelson_tantawi,
@@ -54,12 +55,52 @@ def print_comparison_table():
         )
 
 
+def print_lh_comparison_table():
+    """Print LH vs enhanced LH vs simulation for the same parameter sets."""
+    scenarios = [
+        (1.0, 1.0, 0.3),
+        (1.0, 1.0, 0.6),
+        (1.0, 1.0, 0.9),
+        (1.0, 1.5, 0.3),
+        (1.0, 1.5, 0.6),
+        (1.0, 1.5, 0.9),
+        (1.0, 2.0, 0.3),
+        (1.0, 2.0, 0.6),
+        (1.0, 2.0, 0.9),
+        (1.0, 3.0, 0.6),
+        (1.0, 5.0, 0.6),
+    ]
+
+    header = f"{'mu1':>5} {'mu2':>5} {'lam':>5} {'rho1':>5} | {'T_sim':>7} {'T_LH':>7} {'ErrLH%':>7} {'T_LHenh':>8} {'ErrEnh%':>8}"
+    print(header)
+    print("-" * len(header))
+
+    for mu1, mu2, lam in scenarios:
+        rho1 = lam / mu1
+        t_lh = mean_response_time_lh(lam, mu1, mu2)
+        t_enh = mean_response_time_lh_enhanced(lam, mu1, mu2)
+        res = simulate(lam, mu1, mu2, n_jobs=2_000_000, warmup=100_000, seed=42)
+        t_sim = res.mean_response_time
+        err_lh = (t_lh - t_sim) / t_sim * 100
+        err_enh = (t_enh - t_sim) / t_sim * 100
+        print(
+            f"{mu1:5.1f} {mu2:5.1f} {lam:5.1f} {rho1:5.2f} | "
+            f"{t_sim:7.3f} {t_lh:7.3f} {err_lh:+7.2f}% "
+            f"{t_enh:8.3f} {err_enh:+8.2f}%"
+        )
+
+
 def main():
     print("=" * 60)
     print("Fork-Join Queue: Approximation vs Simulation")
     print("=" * 60)
     print()
     print_comparison_table()
+
+    print()
+    print("LH vs Enhanced LH vs Simulation")
+    print("-" * 60)
+    print_lh_comparison_table()
 
     print("\nGenerating plots...")
 

@@ -1,12 +1,14 @@
 \section{Simulation Validation}
 \label{sec:validation}
 
-Both approximations were validated against discrete-event simulation of the
+All three approximations were validated against discrete-event simulation of the
 two-queue fork-join system.
 Each scenario used 2\,M jobs with a 100\,K-job warmup period and a fixed
 random seed for reproducibility.
 Results for $\Tul$~\eqref{eq:tul} and $\Tlh$~\eqref{eq:tlh} (with $\beta = 10$)
 are shown in Table~\ref{tab:results} alongside the theoretical bounds.
+Table~\ref{tab:results-lhe} compares $\Tlh$ and the enhanced approximation
+$\Tlhe$~\eqref{eq:tlhe}.
 
 \begin{table}[ht]
 \centering
@@ -87,3 +89,61 @@ $\Tul$ is slightly tighter.
          Markers: simulation. Lines: approximations and bounds.}
 \label{fig:vs-hetero}
 \end{figure}
+
+\subsection*{Enhanced LH Approximation}
+
+Table~\ref{tab:results-lhe} compares $\Tlh$ and $\Tlhe$ against simulation.
+Both use $\beta = 10$.
+
+\begin{table}[ht]
+\centering
+\caption{$\Tlh$ vs.\ $\Tlhe$ vs.\ simulation for heterogeneous two-queue fork-join.
+         Errors are $(T_{\text{approx}} - \Tsim)/\Tsim \times 100\%$.}
+\label{tab:results-lhe}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}ccccccccc@{}}
+\toprule
+$\mu_1$ & $\mu_2$ & $\lambda$ & $\rho_1$
+        & $\Tsim$ & $\Tlh$ & Err & $\Tlhe$ & Err \\
+\midrule
+1.0 & 1.0 & 0.3 & 0.30 & 2.088 & 2.089 & $+0.07\%$ & 2.089 & $+0.07\%$ \\
+1.0 & 1.0 & 0.6 & 0.60 & 3.564 & 3.562 & $-0.05\%$ & 3.562 & $-0.05\%$ \\
+1.0 & 1.0 & 0.9 & 0.90 & 13.886 & 13.875 & $-0.08\%$ & 13.875 & $-0.08\%$ \\
+\midrule
+1.0 & 1.5 & 0.3 & 0.30 & 1.705 & 1.698 & $-0.40\%$ & 1.710 & $+0.32\%$ \\
+1.0 & 1.5 & 0.6 & 0.60 & 2.767 & 2.776 & $+0.35\%$ & 2.801 & $+1.25\%$ \\
+1.0 & 1.5 & 0.9 & 0.90 & 10.083 & 10.325 & $+2.41\%$ & 10.362 & $+2.77\%$ \\
+\midrule
+1.0 & 2.0 & 0.3 & 0.30 & 1.582 & 1.595 & $+0.87\%$ & 1.589 & $+0.45\%$ \\
+1.0 & 2.0 & 0.6 & 0.60 & 2.623 & 2.667 & $+1.70\%$ & 2.654 & $+1.20\%$ \\
+1.0 & 2.0 & 0.9 & 0.90 & 9.990 & 10.170 & $+1.80\%$ & 10.150 & $+1.60\%$ \\
+\midrule
+1.0 & 3.0 & 0.6 & 0.60 & 2.546 & 2.583 & $+1.45\%$ & 2.561 & $+0.57\%$ \\
+1.0 & 5.0 & 0.6 & 0.60 & 2.514 & 2.533 & $+0.75\%$ & 2.519 & $+0.19\%$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\paragraph{Homogeneous case ($\mu_1 = \mu_2 = 1.0$).}
+As proved in Section~\ref{sec:approx-lhe}, the quadratic coefficient $c_2 = 0$
+when $r = 1$, so $\Tlhe \equiv \Tlh$.
+Both recover Nelson--Tantawi exactly; residual errors are below $0.1\%$ due
+to finite simulation variance.
+
+\paragraph{Moderate heterogeneity ($r = 1.5$).}
+$\Tlhe$ offers no improvement here and is slightly less accurate than $\Tlh$
+(worst case $+2.77\%$ vs.\ $+2.41\%$ at heavy load).
+This regime is precisely where the power-law model $h(r) = 1 + \tfrac{3}{8}r^{-\beta}$
+is least reliable: the true heavy-traffic constant $h$ varies sharply near $r = 1$,
+and the $\beta$-approximation introduces systematic error that the additional
+derivative term cannot correct.
+
+\paragraph{High heterogeneity ($r \geq 2$).}
+$\Tlhe$ consistently outperforms $\Tlh$:
+at $r = 2$ and $\lambda \in \{0.3, 0.6\}$ errors fall from $+0.87\%,\,+1.70\%$
+to $+0.45\%,\,+1.20\%$; at $r = 3$ from $+1.45\%$ to $+0.57\%$;
+and at $r = 5$ from $+0.75\%$ to $+0.19\%$.
+In this regime $h(r) \approx 1$ and the first derivative $f^{(1)}(0)$ carries
+meaningful information about the service-time heterogeneity that improves the
+approximation over a wide load range.

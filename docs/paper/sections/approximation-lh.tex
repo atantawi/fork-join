@@ -127,3 +127,93 @@ Tunable parameter & $\beta$ (default 10) \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\subsection{First-Order Extension: Enhanced $\Tlh$}
+\label{sec:approx-lhe}
+
+The current $\Tlh$ uses a linear numerator matched to two conditions:
+the zeroth light-traffic derivative $f^{(0)}(0) = T_0$ and the
+heavy-traffic constant $h$.
+The Reiman--Simon framework accommodates a \emph{quadratic} numerator
+by adding the first light-traffic derivative $f^{(1)}(0)$ as a third
+matching condition~\citep{Squillante2026}.
+We denote this enhanced approximation $\Tlhe$.
+
+\subsection{First Light-Traffic Derivative}
+\label{sec:f1}
+
+Following~\citep{Squillante2026}, the first derivative of the mean response
+time with respect to $\lambda$ at $\lambda = 0$ is given by:
+\begin{equation}
+  \label{eq:f1}
+  f^{(1)}(0) = \frac{1}{\mumin^2} + \frac{1}{\mumax^2}
+             - \frac{2}{(\mumin+\mumax)^2}
+             - \frac{2\,\mumin\,\mumax}{(\mumin+\mumax)^4}.
+\end{equation}
+This is derived by considering the sojourn time of a tagged job conditioned
+on exactly one background arrival at time $t \in (-\infty, \infty)$,
+analyzing the resulting joint service-time distribution, and integrating
+over $t$.
+
+\subsection{The Enhanced Formula}
+\label{sec:tlhe}
+
+With three matching conditions---$f^{(0)}(0)$, $f^{(1)}(0)$, and $h$---the
+interpolating polynomial $\tilde{g}(\rho) = c_2\rho^2 + c_1\rho + c_0$
+for $g(\rho) = \mumin(1-\rho)T(\rho)$ has coefficients:
+\begin{align}
+  c_0 &= \mumin \cdot T_0, \label{eq:c0} \\
+  c_1 &= \mumin^2 \cdot f^{(1)}(0) - \mumin \cdot T_0, \label{eq:c1} \\
+  c_2 &= h - c_1 - c_0. \label{eq:c2}
+\end{align}
+Here $c_0$ is identical to $a_0$ in~\eqref{eq:a0}; $c_1$ is determined by
+the first derivative rather than by $h$ alone; and $c_2$ absorbs the
+remaining difference to satisfy the heavy-traffic condition.
+Inverting the scaling gives the enhanced approximation:
+\begin{equation}
+  \label{eq:tlhe}
+  \boxed{\Tlhe = \frac{c_2\,\rho^2 + c_1\,\rho + c_0}{\mumin(1-\rho)},}
+\end{equation}
+where $\rho = \lambda/\mumin$, $T_0$ is given by~\eqref{eq:T0},
+$f^{(1)}(0)$ by~\eqref{eq:f1}, and $h(r)$ by~\eqref{eq:h}.
+
+\subsection{Verification: Homogeneous Case}
+
+When $\mu_1 = \mu_2 = \mu$ (so $\mumin = \mumax = \mu$):
+\begin{equation}
+  f^{(1)}(0) = \frac{2}{\mu^2} - \frac{2}{4\mu^2} - \frac{2\mu^2}{16\mu^4}
+             = \frac{11}{8\mu^2}.
+\end{equation}
+Substituting into~\eqref{eq:c0}--\eqref{eq:c2} with $T_0 = 3/(2\mu)$ and
+$h(1) = 11/8$:
+\begin{equation}
+  c_0 = \frac{3}{2}, \qquad
+  c_1 = \mu^2 \cdot \frac{11}{8\mu^2} - \mu \cdot \frac{3}{2\mu} = -\frac{1}{8}, \qquad
+  c_2 = \frac{11}{8} - \left(-\frac{1}{8}\right) - \frac{3}{2} = 0.
+\end{equation}
+With $c_2 = 0$ the quadratic term vanishes and $\Tlhe$ reduces to $\Tlh$,
+which recovers the Nelson--Tantawi formula~\eqref{eq:nelson-tantawi}
+for all $\rho$.
+The enhancement is automatically inactive in the homogeneous case,
+regardless of $\beta$.
+
+\subsection{Properties of the Enhanced Approximation}
+
+\begin{table}[h]
+\centering
+\caption{Properties of $\Tlhe$.}
+\label{tab:properties-lhe}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Property & Status \\
+\midrule
+Exact for homogeneous case ($\mu_1 = \mu_2$) & \checkmark\quad (for any $\beta$; $c_2 = 0$) \\
+Light traffic limit ($\lambda \to 0$) & \checkmark\quad ($\Tlhe \to T_0$) \\
+First light-traffic derivative matched & \checkmark \\
+Heavy traffic singularity ($\lambda \to \mumin$) & \checkmark\quad ($\Tlhe \sim h(r)/(\mumin-\lambda)$) \\
+Bound compliance $\Tbot \leq \Tlhe \leq \Tub$ & Not guaranteed \\
+Numerator degree & 2 (quadratic) \\
+Tunable parameter & $\beta$ (default 10) \\
+\bottomrule
+\end{tabular}
+\end{table}
