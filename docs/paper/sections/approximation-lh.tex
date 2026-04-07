@@ -1,0 +1,129 @@
+\section{Approximation 2: Light-Heavy Traffic Interpolation}
+\label{sec:approx-lh}
+
+\subsection{The Reiman--Simon Framework}
+
+Reiman and Simon~\citep{Reiman1988} developed a systematic method for
+constructing rational approximations to performance quantities in Markovian
+queueing networks, exploiting exact light-traffic derivatives and a
+heavy-traffic limit.
+For a scalar performance measure $f(\rho)$ with normalizing denominator
+$d(\rho) = \mumin(1-\rho)$, the $n$-th order approximation takes the form
+\begin{equation}
+  \tilde{f}(\rho) = \frac{a_n\rho^n + \cdots + a_1\rho + a_0}{\mumin(1-\rho)},
+\end{equation}
+where the $n+1$ coefficients $\{a_i\}$ are matched to the $n$ derivatives of
+$f$ at $\rho = 0$ and the heavy-traffic constant
+$h = \lim_{\rho\to1}\mumin(1-\rho)f(\rho)$~\citep{Squillante2026}.
+
+We apply this framework to $T(\rho)$ with a first-order (linear) numerator,
+yielding two matching conditions:
+
+\subsection{Matching Condition 1: Light-Traffic Value}
+
+At $\lambda = 0$, all queues are empty.
+The task service times $X_i \sim \mathrm{Exp}(\mu_i)$ are independent and
+$T(0) = \E[\max(X_1, X_2)]$.
+Using the identity $\E[\max(X_1,X_2)] = \E[X_1]+\E[X_2]-\E[\min(X_1,X_2)]$
+and the fact that $\min(X_1,X_2) \sim \mathrm{Exp}(\mu_1+\mu_2)$:
+\begin{equation}
+  \label{eq:T0}
+  T_0 \;=\; T(\rho=0) \;=\; \frac{1}{\mu_1} + \frac{1}{\mu_2}
+      - \frac{1}{\mu_1 + \mu_2}.
+\end{equation}
+Matching $\tilde{T}(0) = T_0$ gives:
+\begin{equation}
+  \label{eq:a0}
+  a_0 = \mumin \cdot T_0.
+\end{equation}
+
+\subsection{Matching Condition 2: Heavy-Traffic Limit}
+
+Define the heavy-traffic constant:
+\begin{equation}
+  h = \lim_{\rho \to 1} \mumin(1-\rho)\cdot T(\rho).
+\end{equation}
+Matching this in $\tilde{T}$ gives $a_0 + a_1 = h$, hence $a_1 = h - a_0$.
+
+\subsection{The Heavy-Traffic Factor $h(r)$}
+
+The value of $h$ depends on the heterogeneity ratio $r = \mumax/\mumin \geq 1$.
+
+\paragraph{Homogeneous case ($r = 1$).}
+When $\mu_1 = \mu_2 = \mu$, both servers saturate simultaneously as
+$\lambda \to \mu$.
+The Nelson--Tantawi formula gives:
+\begin{equation}
+  h = \lim_{\rho\to1}\mu(1-\rho)\cdot\frac{12-\rho}{8(\mu-\lambda)}
+    = \lim_{\rho\to1}\frac{12-\rho}{8} = \frac{11}{8}.
+\end{equation}
+
+\paragraph{Heterogeneous case ($r > 1$).}
+As $\lambda \to \mumin$, the bottleneck server saturates while the faster
+server's utilization approaches $\lambda/\mumax = 1/r < 1$.
+The faster server's sojourn time remains bounded, so the bottleneck dominates
+and $T(\rho) \sim 1/(\mumin - \lambda)$, giving $h \to 1$.
+
+\paragraph{Proposed model.}
+We interpolate between these two limits with the power-law factor:
+\begin{equation}
+  \label{eq:h}
+  h(r) = 1 + \frac{3}{8}\,r^{-\beta}, \qquad r \geq 1,\quad \beta > 0.
+\end{equation}
+This satisfies $h(1) = 11/8$ for all $\beta$, and $h(r) \to 1$ as
+$r \to \infty$.
+The parameter $\beta$ controls the rate of decay; larger $\beta$ means the
+correction vanishes more rapidly with heterogeneity.
+
+\paragraph{Calibration.}
+Simulation data reveal that the transition from $h = 11/8$ to $h \approx 1$
+is very sharp in practice: the effective heavy-traffic constant is already
+$h \approx 1.008$ at $r = 1.5$.
+Matching this observation to~\eqref{eq:h} gives
+$\beta = \log(0.375/0.008)/\log(1.5) \approx 9.5$,
+consistent with a default of $\beta = 10$.
+
+\subsection{The Formula}
+
+Substituting $a_0$, $a_1 = h(r) - a_0$, and $\rho = \lambda/\mumin$:
+\begin{equation}
+  \label{eq:tlh}
+  \boxed{\Tlh = \frac{\mumin T_0 + \bigl(h(r) - \mumin T_0\bigr)\rho}
+                     {\mumin - \lambda},}
+\end{equation}
+where $T_0$ is given by~\eqref{eq:T0} and $h(r)$ by~\eqref{eq:h}.
+
+\subsection{Verification: Homogeneous Case}
+
+When $\mu_1 = \mu_2 = \mu$ (so $r = 1$, $h = 11/8$, $T_0 = 3/(2\mu)$):
+\begin{equation}
+  a_0 = \mu \cdot \frac{3}{2\mu} = \frac{3}{2},
+  \qquad
+  a_1 = \frac{11}{8} - \frac{3}{2} = -\frac{1}{8}.
+\end{equation}
+\begin{equation}
+  \Tlh = \frac{3/2 - \rho/8}{\mu(1-\rho)}
+       = \frac{12 - \rho}{8(\mu - \lambda)}
+       = T_2^{\mathrm{hom}}. \quad \checkmark
+\end{equation}
+This recovery holds for every $\rho \in [0,1)$, regardless of $\beta$,
+because $h(1) = 11/8$ is exact.
+
+\subsection{Properties}
+
+\begin{table}[h]
+\centering
+\caption{Properties of $\Tlh$.}
+\label{tab:properties-lh}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Property & Status \\
+\midrule
+Exact for homogeneous case ($\mu_1 = \mu_2$) & \checkmark\quad (for any $\beta$) \\
+Light traffic limit ($\lambda \to 0$) & \checkmark\quad ($\Tlh \to T_0$) \\
+Heavy traffic singularity ($\lambda \to \mumin$) & \checkmark\quad ($\Tlh \sim h(r)/(\mumin-\lambda)$) \\
+Bound compliance $\Tbot \leq \Tlh \leq \Tub$ & Not guaranteed \\
+Tunable parameter & $\beta$ (default 10) \\
+\bottomrule
+\end{tabular}
+\end{table}

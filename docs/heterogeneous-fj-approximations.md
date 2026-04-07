@@ -241,39 +241,21 @@ As heterogeneity increases, both $T_{\text{UB}}$ and $T_{\text{LH}}$ converge to
 
 ---
 
-## 8. Code
-
-The approximations are implemented in `forkjoin/analytical.py`:
-
-```python
-from forkjoin.analytical import mean_response_time, mean_response_time_lh
-
-# T_UL: upper-lower bound interpolation (default)
-T_UL = mean_response_time(lam=0.6, mu1=1.0, mu2=1.5)
-
-# T_LH: light-heavy traffic interpolation (beta=10 by default)
-T_LH = mean_response_time_lh(lam=0.6, mu1=1.0, mu2=1.5, beta=10.0)
-```
-
-Additional functions: `upper_bound_independent`, `lower_bound_bottleneck`, `upper_bound_split_merge`, `nelson_tantawi` (homogeneous exact).
-
----
-
-## 9. Summary
+## 8. Summary
 
 The two approximation methods address the lack of a closed-form mean response time for the heterogeneous 2-queue fork-join system:
 
 1. **$T_{\text{UL}}$ (bound interpolation):** A convex combination of the independent upper bound and the bottleneck lower bound, weighted by the average utilization. Exact for the homogeneous case, always within bounds, with errors below $1.2\%$ across all tested scenarios. Recommended as the default.
 
-2. **$T_{\text{LH}}$ (light-heavy traffic interpolation):** A rational Reiman-Simon approximation matching the light-traffic value exactly and the heavy-traffic limit via the factor $h(r) = 1 + \tfrac{3}{8}\,r^{-\beta}$. Exact for the homogeneous case. Maximum errors $\approx 2.4\%$ in tested scenarios. The parameter $\beta$ can be refined via simulation; a quadratic numerator (Section 10.1) could further improve accuracy.
+2. **$T_{\text{LH}}$ (light-heavy traffic interpolation):** A rational Reiman-Simon approximation matching the light-traffic value exactly and the heavy-traffic limit via the factor $h(r) = 1 + \tfrac{3}{8}\,r^{-\beta}$. Exact for the homogeneous case. Maximum errors $\approx 2.4\%$ in tested scenarios. The parameter $\beta$ can be refined via simulation; a quadratic numerator (Section 9.1) could further improve accuracy.
 
 Both methods are closed-form, computationally trivial, and calibrated to be exact in the homogeneous limit.
 
 ---
 
-## 10. Future Directions
+## 9. Future Directions
 
-### 10.1 Quadratic Reiman-Simon Approximation for $T_{\text{LH}}$
+### 9.1 Quadratic Reiman-Simon Approximation for $T_{\text{LH}}$
 
 The current $T_{\text{LH}}$ uses a linear numerator, matching two conditions. A quadratic numerator $a_0 + a_1\rho + a_2\rho^2$ would match three conditions: the two above plus the first light-traffic derivative $f'(0)$, which Reiman and Simon [4] express as:
 
@@ -281,11 +263,11 @@ $$\frac{df}{d\rho}\bigg|_{\rho=0} = \mu_{\min} \int_{-\infty}^{+\infty} \left[\h
 
 where $\hat{f}(\emptyset) = T_0$ is the unconditional light-traffic value and $\hat{f}(\{t\})$ is the conditional expected response time given one prior arrival at time $t$. Computing this requires an analysis of the joint queue state conditioned on one background customer, which is non-trivial but feasible. Matching this derivative would reduce the approximation error in the near-homogeneous, heavy-load regime and may also determine $\beta$ analytically.
 
-### 10.2 Analytic Determination of $\beta$
+### 9.2 Analytic Determination of $\beta$
 
 The sharp transition of $h(r)$ near $r = 1$ is a structural property of the heterogeneous fork-join system. A perturbation analysis of the Flatto-Hahn generating function [1] near $r = 1$ would yield $\partial h/\partial r|_{r=1}$, which directly determines $\beta$ (since $h'(1) = -3\beta/8$). This would fully close the approximation without requiring simulation calibration.
 
-### 10.3 Extension to $K > 2$ Servers
+### 9.3 Extension to $K > 2$ Servers
 
 Both methods extend naturally to larger systems:
 - $T_{\text{UL}}$ can use the independent upper bound $T_{\text{UB}} = \sum_{i=1}^{K} 1/(\mu_i - \lambda) - \ldots$ (inclusion-exclusion) and the bottleneck lower bound.
@@ -303,6 +285,6 @@ Both methods extend naturally to larger systems:
 
 [4] M. I. Reiman and B. Simon, "Light traffic limits of sojourn time distributions in Markovian queueing networks," *Stochastic Models*, vol. 4, no. 2, pp. 191–233, 1988.
 
-[5] M. Squillante and A. N. Tantawi, "QC/HPC Resource Allocation/Scheduling," Technical Report, IBM Research, January 2026. (Appendix A.)
+[5] M. Squillante and A. N. Tantawi, "QC/HPC Resource Allocation/Scheduling," Technical Report, January 2026. (Appendix A.)
 
 [6] S. Varma and A. M. Makowski, "Interpolation approximations for symmetric fork-join queues," *Performance Evaluation*, vol. 20, no. 1, pp. 245–265, 1994.
