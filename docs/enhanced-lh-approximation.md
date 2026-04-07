@@ -2,7 +2,7 @@
 
 ## 1. Motivation
 
-The standard $T_{\text{LH}}$ approximation (Section 5 of [`heterogeneous-fj-approximations.md`](heterogeneous-fj-approximations.md)) uses a zero-order Reiman-Simon framework: a linear numerator with two coefficients matched to the zeroth light-traffic derivative $f^{(0)}(0)$ and the heavy-traffic constant $h$. This leaves one degree of freedom unused — the first light-traffic derivative $f^{(1)}(0)$ — which limits accuracy in the near-homogeneous, heavy-load regime where $T_{\text{LH}}$ reaches its worst-case error of $\approx +2.4\%$.
+The standard $T_{\text{LH}}$ approximation (Section 5 of [`heterogeneous-fj-approximations.md`](heterogeneous-fj-approximations.md)) uses a zero-order Reiman-Simon framework: a linear numerator with two coefficients matched to the zeroth light-traffic derivative $f^{(0)}(0)$ and the heavy-traffic constant $h$. This leaves one degree of freedom unused — the first light-traffic derivative $f^{(1)}(0)$ — which limits accuracy in the near-homogeneous, heavy-load regime where $T_{\text{LH}}$ reaches its worst-case error of $\approx +2.0\%$.
 
 Appendix A of Squillante and Tantawi [1] derives closed-form expressions for both $f^{(0)}(0)$ and $f^{(1)}(0)$ for the heterogeneous two-queue fork-join system (Lemmas 1 and 2). Incorporating the first derivative into the Reiman-Simon framework yields a **first-order** approximation with a quadratic numerator that more faithfully captures the system's behavior across load levels.
 
@@ -98,21 +98,21 @@ $T_{\text{LH}}^{\text{enh}}$ is the **full** first-order approximation that uses
 
 ## 7. Numerical Results
 
-Results from discrete-event simulation (2,000,000 jobs, 100,000 warmup, seed 42). Errors are $(T_{\text{approx}} - T_{\text{sim}})/T_{\text{sim}} \times 100\%$.
+Results from discrete-event simulation (20,000,000 jobs per scenario, 500,000 warmup, 5 independent seeds; 95% CI via $t$-distribution across seeds). Errors are $(T_{\text{approx}} - T_{\text{sim}})/T_{\text{sim}} \times 100\%$.
 
-| $\mu_1$ | $\mu_2$ | $\lambda$ | $\rho_1$ | $T_{\text{sim}}$ | $T_{\text{LH}}$ | Err% | $T_{\text{LH}}^{\text{enh}}$ | Err% |
-|:------:|:------:|:--------:|:-------:|:---------------:|:---------------:|:----:|:----------------------------:|:----:|
-| 1.0 | 1.0 | 0.3 | 0.30 | 2.088 | 2.089 | +0.07% | 2.089 | +0.07% |
-| 1.0 | 1.0 | 0.6 | 0.60 | 3.564 | 3.562 | −0.05% | 3.562 | −0.05% |
-| 1.0 | 1.0 | 0.9 | 0.90 | 13.886 | 13.875 | −0.08% | 13.875 | −0.08% |
-| 1.0 | 1.5 | 0.3 | 0.30 | 1.705 | 1.698 | −0.40% | 1.710 | +0.32% |
-| 1.0 | 1.5 | 0.6 | 0.60 | 2.767 | 2.776 | +0.35% | 2.801 | +1.25% |
-| 1.0 | 1.5 | 0.9 | 0.90 | 10.083 | 10.325 | +2.41% | 10.362 | +2.77% |
-| 1.0 | 2.0 | 0.3 | 0.30 | 1.582 | 1.595 | +0.87% | 1.589 | +0.45% |
-| 1.0 | 2.0 | 0.6 | 0.60 | 2.623 | 2.667 | +1.70% | 2.654 | +1.20% |
-| 1.0 | 2.0 | 0.9 | 0.90 | 9.990 | 10.170 | +1.80% | 10.150 | +1.60% |
-| 1.0 | 3.0 | 0.6 | 0.60 | 2.546 | 2.583 | +1.45% | 2.561 | +0.57% |
-| 1.0 | 5.0 | 0.6 | 0.60 | 2.514 | 2.533 | +0.75% | 2.519 | +0.19% |
+| $\mu_1$ | $\mu_2$ | $\lambda$ | $\rho_1$ | $T_{\text{sim}}$ | ±95% CI | $T_{\text{LH}}$ | Err% | $T_{\text{LH}}^{\text{enh}}$ | Err% |
+|:------:|:------:|:--------:|:-------:|:---------------:|:-------:|:---------------:|:----:|:----------------------------:|:----:|
+| 1.0 | 1.0 | 0.3 | 0.30 | 2.089 | 0.001 | 2.089 | +0.01% | 2.089 | +0.01% |
+| 1.0 | 1.0 | 0.6 | 0.60 | 3.561 | 0.002 | 3.563 | +0.03% | 3.563 | +0.03% |
+| 1.0 | 1.0 | 0.9 | 0.90 | 13.855 | 0.061 | 13.875 | +0.15% | 13.875 | +0.15% |
+| 1.0 | 1.5 | 0.3 | 0.30 | 1.707 | 0.001 | 1.698 | −0.50% | 1.710 | +0.23% |
+| 1.0 | 1.5 | 0.6 | 0.60 | 2.767 | 0.001 | 2.776 | +0.34% | 2.801 | +1.23% |
+| 1.0 | 1.5 | 0.9 | 0.90 | 10.120 | 0.024 | 10.325 | +2.03% | 10.362 | +2.39% |
+| 1.0 | 2.0 | 0.3 | 0.30 | 1.583 | 0.001 | 1.595 | +0.76% | 1.589 | +0.35% |
+| 1.0 | 2.0 | 0.6 | 0.60 | 2.623 | 0.001 | 2.667 | +1.67% | 2.654 | +1.17% |
+| 1.0 | 2.0 | 0.9 | 0.90 | 10.028 | 0.024 | 10.170 | +1.42% | 10.150 | +1.22% |
+| 1.0 | 3.0 | 0.6 | 0.60 | 2.547 | 0.001 | 2.583 | +1.41% | 2.561 | +0.54% |
+| 1.0 | 5.0 | 0.6 | 0.60 | 2.515 | 0.001 | 2.533 | +0.71% | 2.519 | +0.16% |
 
 ---
 
@@ -120,11 +120,11 @@ Results from discrete-event simulation (2,000,000 jobs, 100,000 warmup, seed 42)
 
 ### 8.1 Homogeneous Case ($\mu_1 = \mu_2 = 1.0$)
 
-Both approximations are identical — the quadratic coefficient $c_2 = 0$ as shown in Section 5 — and errors remain below $0.1\%$ (attributable to finite simulation variance). Both recover the Nelson-Tantawi formula exactly by construction.
+Both approximations are identical — the quadratic coefficient $c_2 = 0$ as shown in Section 5 — and residual errors (≤ 0.15%) are simulation noise. At $\lambda = 0.9$ the CI half-width is ±0.061, reflecting heavy-tailed response times near saturation; the analytical value 13.875 lies within this interval.
 
 ### 8.2 Moderate Heterogeneity ($r = 1.5$)
 
-Results are mixed. At light-to-moderate load ($\lambda \in \{0.3, 0.6\}$), the enhanced approximation is in the same ballpark as $T_{\text{LH}}$ but slightly worse. At heavy load ($\lambda = 0.9$), the enhancement makes little difference (+2.41% vs +2.77%). This regime — near-homogeneous and heavily loaded — is precisely where the approximation of $h(r)$ by the power-law $1 + \tfrac{3}{8}r^{-\beta}$ is least reliable, since the true $h$ varies sharply near $r = 1$. A more accurate determination of $h$ (e.g., via the perturbation approach of [2, §9.2]) would likely improve performance here.
+$T_{\text{LH}}^{\text{enh}}$ is slightly worse than $T_{\text{LH}}$ across all loads. At heavy load ($\lambda = 0.9$), the errors are +2.39% vs +2.03%. The 20M-job simulation corrects a downward bias in the 2M-job estimate at this operating point ($T_{\text{sim}}$ shifts from 10.083 to 10.120); the relative ranking is unchanged. This regime is where the power-law model $h(r) = 1 + \tfrac{3}{8}r^{-\beta}$ is least reliable — the true $h$ varies steeply near $r = 1$ — and the error in the heavy-traffic anchor is amplified by the higher-order fit.
 
 ### 8.3 High Heterogeneity ($r \geq 2$)
 
@@ -132,24 +132,24 @@ The enhancement provides clear improvement:
 
 | Scenario | $T_{\text{LH}}$ error | $T_{\text{LH}}^{\text{enh}}$ error | Improvement |
 |----------|----------------------|------------------------------------|-------------|
-| $r=2$, $\lambda=0.3$ | +0.87% | +0.45% | 48% |
-| $r=2$, $\lambda=0.6$ | +1.70% | +1.20% | 29% |
-| $r=2$, $\lambda=0.9$ | +1.80% | +1.60% | 11% |
-| $r=3$, $\lambda=0.6$ | +1.45% | +0.57% | 61% |
-| $r=5$, $\lambda=0.6$ | +0.75% | +0.19% | 75% |
+| $r=2$, $\lambda=0.3$ | +0.76% | +0.35% | 54% |
+| $r=2$, $\lambda=0.6$ | +1.67% | +1.17% | 30% |
+| $r=2$, $\lambda=0.9$ | +1.42% | +1.22% | 14% |
+| $r=3$, $\lambda=0.6$ | +1.41% | +0.54% | 62% |
+| $r=5$, $\lambda=0.6$ | +0.71% | +0.16% | 77% |
 
-The improvement is most pronounced at high heterogeneity and light-to-moderate load — exactly the regime where the additional information in $f^{(1)}(0)$ is most useful (the system is far from saturation and the queue dynamics are governed primarily by service time distributions rather than queueing delays).
+The improvement is most pronounced at high heterogeneity and light-to-moderate load — exactly the regime where the additional information in $f^{(1)}(0)$ is most useful (the system is far from saturation and queue dynamics are governed primarily by service-time distributions rather than queueing delays).
 
 ### 8.4 Summary of Accuracy
 
 | Regime | $T_{\text{LH}}$ max error | $T_{\text{LH}}^{\text{enh}}$ max error |
 |--------|--------------------------|----------------------------------------|
-| Homogeneous ($r=1$) | ≤ 0.08% | ≤ 0.08% |
-| Moderate heterogeneity ($r=1.5$) | ≤ 2.41% | ≤ 2.77% |
-| High heterogeneity ($r \geq 2$) | ≤ 1.80% | ≤ 1.60% |
-| All scenarios | ≤ 2.41% | ≤ 2.77% |
+| Homogeneous ($r=1$) | ≤ 0.15% | ≤ 0.15% |
+| Moderate heterogeneity ($r=1.5$) | ≤ 2.03% | ≤ 2.39% |
+| High heterogeneity ($r \geq 2$) | ≤ 1.67% | ≤ 1.22% |
+| All scenarios | ≤ 2.03% | ≤ 2.39% |
 
-The enhanced approximation improves on $T_{\text{LH}}$ for $r \geq 2$ but offers no benefit (and a slight degradation) at $r = 1.5$. The overall worst-case error is comparable.
+The enhanced approximation improves on $T_{\text{LH}}$ for $r \geq 2$ (up to 77% error reduction) but is slightly worse at $r = 1.5$. The overall worst-case errors are comparable.
 
 ---
 
