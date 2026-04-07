@@ -32,13 +32,21 @@ Research project on **fork-join (FJ) queues** — a queueing model where arrivin
 - **Homogeneous FJ (n=2):** `T_2 = (12 - rho) / 8 * T_1`
 - **Independent upper bound (n=K):** `T_K <= H_K * T_1` where `H_K` is the K-th harmonic number
 - **Scaling approximation (K>=2):** `T_K = [H_K/H_2 + (4/11)(1 - H_K/H_2) * rho] * T_2`
+- **T_UL approximation:** `T_UL = (1 - alpha)*T_UB + alpha*T_bot` where `alpha = (rho_1+rho_2)/8`
+- **T_LH approximation:** `T_LH = (a0 + a1*rho) / (mu_min - lambda)` where `a0 = mu_min*T0`, `a1 = h(r) - a0`, `h(r) = 1 + 3/8 * r^(-beta)`, `r = mu_max/mu_min`, `beta=10`
+- **T_LH_enhanced (first-order):** `T_LHe = (c2*rho^2 + c1*rho + c0) / (mu_min*(1-rho))` where `c0 = mu_min*T0`, `c1 = mu_min^2*f1 - mu_min*T0`, `c2 = h - c1 - c0`, `f1 = 1/mu_min^2 + 1/mu_max^2 - 2/(mu_min+mu_max)^2 - 2*mu_min*mu_max/(mu_min+mu_max)^4`
 - The Flatto-Hahn generating function for the heterogeneous 2-queue case uses `P(z,0)` expressed via `sqrt(a_3 - z)` where `a_3` is a root of the discriminant `D_1(z) = [(1+alpha+beta)z - alpha]^2 - 4*beta*z^3` (with alpha=mu_1/lambda, beta=mu_2/lambda)
 
 ## Notation Conventions
 
 - `lambda`: Poisson job arrival rate
 - `mu`, `mu_i`: exponential service rate(s)
+- `mu_min = min(mu_1, mu_2)`, `mu_max = max(mu_1, mu_2)`: bottleneck and faster server rates
 - `rho = lambda/mu`: server utilization (homogeneous case)
+- `rho_i = lambda/mu_i`: utilization of server i (heterogeneous case)
+- `r = mu_max/mu_min`: heterogeneity ratio (r=1 homogeneous, r→∞ highly heterogeneous)
 - `T`, `T_K`: mean job response time (K queues)
 - `n` or `K`: number of parallel queues/servers
 - `H_K`: harmonic number sum(1/i, i=1..K)
+- `T0 = 1/mu_1 + 1/mu_2 - 1/(mu_1+mu_2)`: light-traffic limit (E[max(X_1,X_2)] at lambda=0)
+- `h(r) = 1 + 3/8 * r^(-beta)`: heavy-traffic factor; h(1)=11/8, h→1 as r→∞

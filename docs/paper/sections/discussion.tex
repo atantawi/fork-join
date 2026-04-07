@@ -60,22 +60,53 @@ while $\Tul$ provides an alternative route via direct bound interpolation.
 
 \subsection{Accuracy and Limitations}
 
-$\Tul$ provides consistently small, positive errors ($\leq 1.2\%$) and is
+$\Tul$ provides consistently small errors ($\leq 1.16\%$) and is
 guaranteed to lie within the bounds.
 Its main limitation is that the weight $\alpha = (\rho_1+\rho_2)/8$ is
 derived from the homogeneous case and may not optimally represent the
 correlation structure at intermediate heterogeneity levels.
 
-$\Tlh$ provides a tighter fit near homogeneity but has larger errors ($\leq 2.4\%$)
+$\Tlh$ provides a tighter fit near homogeneity but has larger errors ($\leq 2.03\%$)
 at the transition regime ($r \approx 1.5$, heavy load), where the linear
 numerator has insufficient flexibility to capture the joint dependence on
 both $r$ and $\rho$.
-Its parameter $\beta$ has been calibrated to $10$ from available simulation
-data; a more systematic calibration over a finer grid of $(r, \rho)$ values
-could refine this estimate.
-The Reiman--Simon framework also supports a quadratic numerator (matching the
-first light-traffic derivative $f'(0)$ as well), which would add one more
-degree of freedom and could reduce errors in the transition regime.
+
+$\Tlhe$ improves on $\Tlh$ for $r \geq 2$ by incorporating the first
+light-traffic derivative, reducing errors by up to $77\%$ in those scenarios
+(from $+0.71\%$ to $+0.16\%$ at $r = 5$).
+However, at $r \approx 1.5$ the enhancement is counterproductive: the
+quadratic term overshoots, yielding slightly larger errors than $\Tlh$
+(worst case $+2.39\%$ vs.\ $+2.03\%$ at heavy load).
+The root cause is that $h(r)$ varies steeply near $r = 1$, so any error in
+the heavy-traffic anchor is amplified by the higher-order fit.
+Both LH variants are therefore less accurate than $\Tul$ in the $r=1.5$ regime.
+In all LH variants, the parameter $\beta$ is calibrated to $10$ from simulation
+data; an analytic determination (see Section~\ref{sec:conclusion}) could
+improve performance uniformly and resolve this limitation.
+
+Also added to Table~\ref{tab:comparison} is $\Tlhe$.
+
+\begin{table}[ht]
+\centering
+\caption{Updated comparison of methods (replacing Table~\ref{tab:comparison}).}
+\label{tab:comparison2}
+\begin{tabular}{@{}lllcc@{}}
+\toprule
+Reference & Type & Closed-form? & Exact (hom.)? & Heterogeneous? \\
+\midrule
+Nelson--Tantawi~\citep{Nelson1988} & Approx.\ (hom.\ only) & Yes & Yes & No \\
+Flatto--Hahn~\citep{Flatto1984,Flatto1985} & Exact (gen.\ func.) & No & Yes & Yes \\
+Baccelli et al.~\citep{Baccelli1989} & Bounds & Partial & No & Yes \\
+Varma--Makowski~\citep{Varma1994} & LH interp.\ (hom.) & Yes & Yes & No \\
+Kemper--Mandjes~\citep{Kemper2012} & Bounds + asymptotics & Partial & No & Yes \\
+Rizk et al.~\citep{Rizk2015} & Distributional bounds & No & No & Yes \\
+Mohanty et al.~\citep{Mohanty2024} & Bounds ($(k,k)$ FJ) & Partial & No & Yes \\
+\textbf{This work ($\Tul$)} & Bound interpolation & \textbf{Yes} & \textbf{Yes} & \textbf{Yes} \\
+\textbf{This work ($\Tlh$)} & LH traffic interp.\ (0th order) & \textbf{Yes} & \textbf{Yes} & \textbf{Yes} \\
+\textbf{This work ($\Tlhe$)} & LH traffic interp.\ (1st order) & \textbf{Yes} & \textbf{Yes} & \textbf{Yes} \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Recommendations}
 
@@ -84,12 +115,14 @@ For practical use:
 \item Use $\Tul$ when a guaranteed bound is required or when high heterogeneity
       ($r \geq 2$) is expected. It is simpler (no free parameters) and
       uniformly accurate.
-\item Use $\Tlh$ when theoretical grounding in the Reiman--Simon framework is
-      important, or when the system is nearly homogeneous and the tighter
-      accuracy at low-to-moderate heterogeneity is valued.
-\item Both methods should be used together as a consistency check: agreement
-      between $\Tul$ and $\Tlh$ provides confidence in the estimate;
-      significant disagreement signals a regime where further analysis
+\item Use $\Tlhe$ when $r \geq 2$ and the highest accuracy within the
+      Reiman--Simon family is desired. It is strictly better than $\Tlh$
+      for $r \geq 2$ and identical to it at $r = 1$.
+\item Use $\Tlh$ (zero-order) when $r \approx 1.5$, where the first-order
+      enhancement does not help and the simpler formula is preferable.
+\item Use $\Tul$ and $\Tlhe$ together as a consistency check: agreement
+      between them provides confidence in the estimate; significant
+      disagreement signals a regime where further analysis
       (e.g., simulation or numerical inversion of the Flatto--Hahn generating
       function) is warranted.
 \end{itemize}

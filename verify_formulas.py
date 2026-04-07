@@ -8,6 +8,7 @@ from forkjoin.analytical import (
     nelson_tantawi,
     mean_response_time,
     mean_response_time_lh,
+    mean_response_time_lh_enhanced,
     _validate
 )
 
@@ -32,13 +33,19 @@ def verify_homogeneous():
             print(f"\nlam={lam:.1f}, rho={rho:.2f}")
             print(f"  Nelson-Tantawi: {t_nelson:.6f}")
             print(f"  T_UL:            {t_ul:.6f}  (error: {(t_ul-t_nelson)/t_nelson*100:.4f}%)")
+            t_lhe = mean_response_time_lh_enhanced(lam, mu, mu)
             print(f"  T_LH:            {t_lh:.6f}  (error: {(t_lh-t_nelson)/t_nelson*100:.4f}%)")
+            print(f"  T_LH_enh:        {t_lhe:.6f}  (error: {(t_lhe-t_nelson)/t_nelson*100:.4f}%)")
             print(f"  T_UB:            {t_ub:.6f}")
             print(f"  T_bot:           {t_bot:.6f}")
 
             # Verify T_UL is close to Nelson-Tantawi
             assert abs(t_ul - t_nelson) / t_nelson < 1e-10, "T_UL should exactly match Nelson-Tantawi"
             print("  ✓ T_UL = Nelson-Tantawi (exact)")
+
+            # Verify T_LH_enh = T_LH in homogeneous case (c2 must be zero)
+            assert abs(t_lhe - t_nelson) / t_nelson < 1e-10, "T_LH_enh should exactly match Nelson-Tantawi"
+            print("  ✓ T_LH_enh = Nelson-Tantawi (exact, c2=0)")
 
         except Exception as e:
             print(f"  Error: {e}")
@@ -114,8 +121,44 @@ def verify_formulas():
     print(f"  Difference:      {t_impl - t_simplified:.2e}")
     print(f"  Relative error:  {(t_impl - t_simplified)/t_simplified*100:.6f}%")
 
+def verify_enhanced_lh():
+    """Verify T_LH_enh properties: homogeneous exactness and improvement at high r."""
+    print("\n" + "=" * 60)
+    print("ENHANCED LH VERIFICATION")
+    print("=" * 60)
+
+    # 1. Homogeneous: c2 must be zero, result must equal Nelson-Tantawi exactly
+    print("\n--- Homogeneous case (r=1): T_LH_enh must equal Nelson-Tantawi ---")
+    mu = 1.0
+    for lam in [0.1, 0.3, 0.6, 0.9]:
+        t_nt  = nelson_tantawi(lam, mu)
+        t_lhe = mean_response_time_lh_enhanced(lam, mu, mu)
+        err   = abs(t_lhe - t_nt) / t_nt
+        assert err < 1e-10, f"T_LH_enh != Nelson-Tantawi at lam={lam}: err={err}"
+        print(f"  lam={lam:.1f}: T_NT={t_nt:.6f}  T_LH_enh={t_lhe:.6f}  err={err:.2e}  ✓")
+
+    # 2. Heterogeneous (r>=2): T_LH_enh should be closer to simulation than T_LH
+    # We use the known simulation values from the paper as reference
+    print("\n--- High heterogeneity (r>=2): T_LH_enh error < T_LH error ---")
+    sim_values = {
+        (1.0, 2.0, 0.3): 1.582,
+        (1.0, 2.0, 0.6): 2.623,
+        (1.0, 3.0, 0.6): 2.546,
+        (1.0, 5.0, 0.6): 2.514,
+    }
+    for (mu1, mu2, lam), t_sim in sim_values.items():
+        t_lh  = mean_response_time_lh(lam, mu1, mu2)
+        t_lhe = mean_response_time_lh_enhanced(lam, mu1, mu2)
+        err_lh  = abs(t_lh  - t_sim) / t_sim * 100
+        err_lhe = abs(t_lhe - t_sim) / t_sim * 100
+        better = "✓" if err_lhe < err_lh else "✗"
+        print(f"  mu1={mu1}, mu2={mu2}, lam={lam}: "
+              f"T_LH err={err_lh:.2f}%  T_LH_enh err={err_lhe:.2f}%  {better}")
+
+
 if __name__ == "__main__":
     import math
     verify_homogeneous()
     verify_heterogeneous()
     verify_formulas()
+    verify_enhanced_lh()

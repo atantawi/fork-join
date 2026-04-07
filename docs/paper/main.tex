@@ -7,6 +7,7 @@
 \usepackage{hyperref}
 \usepackage{natbib}
 \usepackage{xcolor}
+\usepackage{authblk}
 
 %% Macros shared across sections
 \newcommand{\E}{\mathbb{E}}
@@ -14,21 +15,26 @@
 \newcommand{\Tbot}{T_{\text{bot}}}
 \newcommand{\Tul}{T_{\text{UL}}}
 \newcommand{\Tlh}{T_{\text{LH}}}
+\newcommand{\Tlhe}{T_{\text{LH}}^{\text{enh}}}
 \newcommand{\Tsim}{T_{\text{sim}}}
 \newcommand{\Smax}{S_{\max}}
 \newcommand{\mumin}{\mu_{\min}}
 \newcommand{\mumax}{\mu_{\max}}
 
-\title{Two Approximations for the Mean Response Time of\\
+\title{Approximations for the Mean Response Time of\\
        Heterogeneous Two-Queue Fork-Join Systems}
-\author{Anonymous Author}
+
+\author[]{Mark Squillante}
+\author[]{Asser N. Tantawi}
+\affil[]{IBM T. J. Watson Research Center, Yorktown Heights, NY \\
+       \texttt{\{mss, tantawi\}@us.ibm.com}}
 \date{}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-We develop and compare two closed-form approximations for the mean response time
+We develop and compare closed-form approximations for the mean response time
 of a heterogeneous two-queue M/M/1 fork-join system, in which the two servers
 may have different service rates $\mu_1 \geq \mu_2$.
 The first approximation, $\Tul$, interpolates between a known independent upper
@@ -38,9 +44,12 @@ The second approximation, $\Tlh$, is derived from the Reiman--Simon light-heavy
 traffic interpolation framework: it matches the exact light-traffic value and a
 heavy-traffic limit $h(r)$ that depends on the heterogeneity ratio
 $r = \mu_1/\mu_2$.
-Both approximations recover the exact Nelson--Tantawi formula in the homogeneous
-case ($\mu_1 = \mu_2$) and are validated against discrete-event simulation across
-a wide range of loads and heterogeneity levels, with errors below $2.5\%$.
+We then extend $\Tlh$ to an enhanced approximation $\Tlhe$ by additionally
+matching the first light-traffic derivative, yielding a quadratic numerator
+that improves accuracy at high heterogeneity.
+All three approximations recover the exact Nelson--Tantawi formula in the
+homogeneous case ($\mu_1 = \mu_2$) and are validated against discrete-event
+simulation across a wide range of loads and heterogeneity levels.
 \end{abstract}
 
 \input{sections/introduction}

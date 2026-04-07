@@ -94,6 +94,58 @@ def mean_response_time_lh(lam, mu1, mu2, beta=10.0):
     return (a0 + a1 * rho) / (mu_min - lam)
 
 
+def mean_response_time_lh_enhanced(lam, mu1, mu2, beta=10.0):
+    """Enhanced (first-order) light-heavy traffic interpolation approximation.
+
+    Extends mean_response_time_lh by adding the first light-traffic derivative
+    f^(1)(0) (Lemma 2 of Squillante & Tantawi 2026), yielding a quadratic
+    numerator:
+
+        T_LH_enh = (c2*rho^2 + c1*rho + c0) / (mu_min*(1 - rho))
+
+    Three matching conditions determine the three coefficients:
+      - c0: zeroth light-traffic derivative f^(0)(0)   [same as T_LH]
+      - c1: first light-traffic derivative f^(1)(0)    [new term]
+      - c2: heavy-traffic constant h(r)                [same formula as T_LH]
+
+    Specifically:
+        c0 = mu_min * T_0
+        c1 = mu_min^2 * f1 - mu_min * T_0
+        c2 = h - c1 - c0
+
+    where T_0 = 1/mu1 + 1/mu2 - 1/(mu1+mu2)  and
+          f1  = 1/mu_min^2 + 1/mu_max^2
+                - 2/(mu_min+mu_max)^2
+                - 2*mu_min*mu_max/(mu_min+mu_max)^4
+
+    In the homogeneous case (mu1=mu2=mu): c2=0 and the formula reduces
+    exactly to Nelson-Tantawi for all rho, identical to T_LH.
+
+    Args:
+        lam: Poisson arrival rate.
+        mu1: Service rate of server 1.
+        mu2: Service rate of server 2.
+        beta: Shape parameter for h(r). Default 10.0 (same as T_LH).
+    """
+    _validate(lam, mu1, mu2)
+    mu_min = min(mu1, mu2)
+    mu_max = max(mu1, mu2)
+    t0 = 1 / mu1 + 1 / mu2 - 1 / (mu1 + mu2)
+    f1 = (
+        1 / mu_min**2
+        + 1 / mu_max**2
+        - 2 / (mu_min + mu_max)**2
+        - 2 * mu_min * mu_max / (mu_min + mu_max)**4
+    )
+    r = mu_max / mu_min
+    h = 1.0 + 0.375 * r**(-beta)
+    c0 = mu_min * t0
+    c1 = mu_min**2 * f1 - mu_min * t0
+    c2 = h - c1 - c0
+    rho = lam / mu_min
+    return (c2 * rho**2 + c1 * rho + c0) / (mu_min * (1 - rho))
+
+
 def mean_response_time(lam, mu1, mu2):
     """Approximate mean response time for heterogeneous 2-queue fork-join.
 
