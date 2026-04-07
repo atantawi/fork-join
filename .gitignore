@@ -5,9 +5,11 @@ dist/
 build/
 .venv/
 .claude/
+.bob/
 claude-contexts/
 *.aux
 *.bbl
 *.blg
 *.log
 *.out
+.DS_Store

@@ -8,13 +8,19 @@
 \usepackage{natbib}
 \usepackage{xcolor}
 
+%% Macros shared across sections
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\Tub}{T_{\text{UB}}}
 \newcommand{\Tbot}{T_{\text{bot}}}
-\newcommand{\Tsm}{T_{\text{SM}}}
+\newcommand{\Tul}{T_{\text{UL}}}
+\newcommand{\Tlh}{T_{\text{LH}}}
+\newcommand{\Tsim}{T_{\text{sim}}}
 \newcommand{\Smax}{S_{\max}}
+\newcommand{\mumin}{\mu_{\min}}
+\newcommand{\mumax}{\mu_{\max}}
 
-\title{Approximate Mean Response Time for Heterogeneous\\Two-Queue Fork-Join Systems}
+\title{Two Approximations for the Mean Response Time of\\
+       Heterogeneous Two-Queue Fork-Join Systems}
 \author{Anonymous Author}
 \date{}
 
@@ -22,18 +28,30 @@
 \maketitle
 
 \begin{abstract}
-We derive a simple closed-form approximation for the mean response time of a heterogeneous two-queue M/M/1 fork-join system, where servers may have different service rates. The approximation interpolates between an independent upper bound and a bottleneck lower bound using a weight determined by the average server utilization. The formula is exact for the homogeneous case (recovering the Nelson--Tantawi result), satisfies known bounds, and exhibits correct limiting behavior in both light and heavy traffic. Discrete-event simulation validates the approximation to within 2\% across a wide range of parameters.
+We develop and compare two closed-form approximations for the mean response time
+of a heterogeneous two-queue M/M/1 fork-join system, in which the two servers
+may have different service rates $\mu_1 \geq \mu_2$.
+The first approximation, $\Tul$, interpolates between a known independent upper
+bound and a bottleneck lower bound, using the average server utilization as the
+interpolation weight.
+The second approximation, $\Tlh$, is derived from the Reiman--Simon light-heavy
+traffic interpolation framework: it matches the exact light-traffic value and a
+heavy-traffic limit $h(r)$ that depends on the heterogeneity ratio
+$r = \mu_1/\mu_2$.
+Both approximations recover the exact Nelson--Tantawi formula in the homogeneous
+case ($\mu_1 = \mu_2$) and are validated against discrete-event simulation across
+a wide range of loads and heterogeneity levels, with errors below $2.5\%$.
 \end{abstract}
 
 \input{sections/introduction}
 \input{sections/bounds}
-\input{sections/approximation}
+\input{sections/approximation-ul}
+\input{sections/approximation-lh}
 \input{sections/validation}
 \input{sections/discussion}
 \input{sections/conclusion}
 
 \bibliographystyle{abbrv}
-%\bibliographystyle{plainnat}
 \bibliography{references}
 
 \end{document}

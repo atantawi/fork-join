@@ -1,0 +1,74 @@
+\section{Approximation 1: Upper-Lower Bound Interpolation}
+\label{sec:approx-ul}
+
+\subsection{Derivation}
+
+We seek a convex combination of $\Tub$ and $\Tbot$ that:
+\begin{enumerate}
+  \item recovers the Nelson--Tantawi result~\eqref{eq:nelson-tantawi} when
+        $\mu_1 = \mu_2$,
+  \item approaches $\Tub$ in light traffic ($\lambda \to 0$),
+  \item approaches $\Tbot$ in heavy traffic ($\lambda \to \mumin$), and
+  \item always satisfies $\Tbot \leq T \leq \Tub$.
+\end{enumerate}
+
+Write $\Tul = (1-\alpha)\Tub + \alpha\Tbot$ and determine $\alpha$ from
+condition~1.
+In the homogeneous case, $\Tub = \tfrac{3}{2}T_1$ and $\Tbot = T_1$, so:
+\begin{equation}
+  \frac{12-\rho}{8}T_1 = (1-\alpha)\tfrac{3}{2}T_1 + \alpha T_1
+  \;\;\Longrightarrow\;\;
+  \alpha = \frac{3/2 - (12-\rho)/8}{3/2 - 1} = \frac{\rho}{4}.
+\end{equation}
+The natural heterogeneous generalization replaces $\rho$ with the average
+utilization $\bar{\rho} = (\rho_1+\rho_2)/2$, giving:
+\begin{equation}
+  \alpha = \frac{\bar{\rho}}{4} = \frac{\rho_1 + \rho_2}{8}.
+\end{equation}
+
+\subsection{The Formula}
+
+\begin{equation}
+  \label{eq:tul}
+  \boxed{\Tul = \left(1 - \frac{\rho_1+\rho_2}{8}\right)\Tub
+                + \frac{\rho_1+\rho_2}{8}\,\Tbot,}
+\end{equation}
+where $\Tub$ and $\Tbot$ are given by~\eqref{eq:tub} and~\eqref{eq:tbot}.
+
+\subsection{Verification: Homogeneous Case}
+
+When $\mu_1 = \mu_2 = \mu$:
+$\rho_1 = \rho_2 = \rho$,
+$\Tub = \tfrac{3}{2}T_1$,
+$\Tbot = T_1$,
+$\alpha = \rho/4$.
+Substituting:
+\begin{equation}
+  \Tul = \left(1 - \frac{\rho}{4}\right)\frac{3}{2}T_1 + \frac{\rho}{4}T_1
+       = \frac{3}{2}T_1 - \frac{3\rho}{8}T_1 + \frac{\rho}{4}T_1
+       = \frac{12-\rho}{8}T_1 = T_2^{\mathrm{hom}}. \quad \checkmark
+\end{equation}
+
+\subsection{Properties}
+
+\begin{table}[h]
+\centering
+\caption{Properties of $\Tul$.}
+\label{tab:properties-ul}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Property & Status \\
+\midrule
+Exact for homogeneous case ($\mu_1 = \mu_2$) & \checkmark \\
+Satisfies $\Tbot \leq \Tul \leq \Tub$ & \checkmark\quad ($0 \leq \alpha \leq 1/4 < 1$) \\
+Light traffic limit ($\lambda \to 0$) & \checkmark\quad ($\alpha \to 0$, so $\Tul \to \Tub$) \\
+Heavy traffic limit ($\lambda \to \mumin$) & \checkmark\quad ($\Tbot$ diverges; $\Tul/\Tbot \to 1$) \\
+No free parameters & \checkmark \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The weight $\alpha \leq 1/4$ ensures $\Tul$ always lies strictly within the
+bounds (unless $\alpha = 0$, i.e., $\lambda = 0$).
+The formula is symmetric in $\mu_1$ and $\mu_2$ via the average utilization,
+consistent with the symmetry of the original problem.

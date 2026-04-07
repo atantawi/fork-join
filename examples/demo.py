@@ -6,6 +6,7 @@ import numpy as np
 
 from forkjoin import (
     mean_response_time,
+    mean_response_time_lh,
     upper_bound_independent,
     lower_bound_bottleneck,
     nelson_tantawi,
@@ -32,7 +33,7 @@ def print_comparison_table():
         (1.0, 5.0, 0.6),
     ]
 
-    header = f"{'mu1':>5} {'mu2':>5} {'lam':>5} {'rho1':>5} | {'T_bot':>7} {'T_sim':>7} {'T_approx':>8} {'T_UB':>7} {'Error':>7}"
+    header = f"{'mu1':>5} {'mu2':>5} {'lam':>5} {'rho1':>5} | {'T_bot':>7} {'T_sim':>7} {'T_approx':>8} {'Err%':>6} {'T_LH':>7} {'ErrLH%':>7} {'T_UB':>7}"
     print(header)
     print("-" * len(header))
 
@@ -41,12 +42,15 @@ def print_comparison_table():
         t_bot = lower_bound_bottleneck(lam, mu1, mu2)
         t_ub = upper_bound_independent(lam, mu1, mu2)
         t_approx = mean_response_time(lam, mu1, mu2)
+        t_lh = mean_response_time_lh(lam, mu1, mu2)
         res = simulate(lam, mu1, mu2, n_jobs=2_000_000, warmup=100_000, seed=42)
         t_sim = res.mean_response_time
         error = (t_approx - t_sim) / t_sim * 100
+        error_lh = (t_lh - t_sim) / t_sim * 100
         print(
             f"{mu1:5.1f} {mu2:5.1f} {lam:5.1f} {rho1:5.2f} | "
-            f"{t_bot:7.3f} {t_sim:7.3f} {t_approx:8.3f} {t_ub:7.3f} {error:+6.2f}%"
+            f"{t_bot:7.3f} {t_sim:7.3f} {t_approx:8.3f} {error:+6.2f}% "
+            f"{t_lh:7.3f} {error_lh:+7.2f}% {t_ub:7.3f}"
         )
 
 
