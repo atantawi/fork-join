@@ -209,8 +209,8 @@ where $c_0 = \mu_{\min}T_0$, $c_1 = \mu_{\min}^2 f^{(1)}(0) - \mu_{\min}T_0$, $c
 | **Bound compliance** | Always | Not guaranteed | Not guaranteed |
 | **Numerator degree** | — | 1 | 2 |
 | **Parameters** | None | $\beta=10$ | $\beta=10$ |
-| **Max error ($r \geq 2$)** | $\leq 0.73\%$ | $\leq 1.80\%$ | $\leq 1.60\%$ |
-| **Max error ($r = 1.5$)** | $\leq 1.16\%$ | $\leq 2.41\%$ | $\leq 2.77\%$ |
+| **Max error ($r \geq 2$)** | $\leq 0.67\%$ | $\leq 1.67\%$ | $\leq 1.22\%$ |
+| **Max error ($r = 1.5$)** | $\leq 1.16\%$ | $\leq 2.03\%$ | $\leq 2.39\%$ |
 
 ---
 
