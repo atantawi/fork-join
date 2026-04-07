@@ -44,7 +44,7 @@ $$T_2^{\text{hom}} = \frac{12 - \rho}{8(\mu - \lambda)}$$
 
 ## 3. Approximation Methods
 
-### 3.0 Overview
+### 3.1 Overview
 
 Three closed-form approximations are available. All recover the Nelson-Tantawi result exactly in the homogeneous case.
 
@@ -56,9 +56,9 @@ Three closed-form approximations are available. All recover the Nelson-Tantawi r
 
 ---
 
-## 3. Approximation Method 1: Upper-Lower Bound Interpolation ($T_{\text{UL}}$)
+## 4. Approximation Method 1: Upper-Lower Bound Interpolation ($T_{\text{UL}}$)
 
-### 3.1 Derivation Strategy
+### 4.1 Derivation Strategy
 
 Uses a **convex combination** interpolation between $T_{\text{UB}}$ and $T_{\text{bot}}$, guided by:
 
@@ -67,7 +67,7 @@ Uses a **convex combination** interpolation between $T_{\text{UB}}$ and $T_{\tex
 3. **Heavy traffic limit:** $T$ should approach $T_{\text{bot}}$ (bottleneck dominates)
 4. **Bound compliance:** $T_{\text{bot}} \leq T \leq T_{\text{UB}}$
 
-### 3.2 The Formula
+### 4.2 The Formula
 
 Define the **average utilization** $\bar{\rho} = (\rho_1 + \rho_2)/2$ and the **interpolation weight**:
 
@@ -81,7 +81,7 @@ Equivalently:
 
 $$T_{\text{UL}} = \left(1 - \frac{\rho_1 + \rho_2}{8}\right) T_{\text{UB}} + \frac{\rho_1 + \rho_2}{8}\; T_{\text{bot}}$$
 
-### 3.3 Verification: Homogeneous Case
+### 4.3 Verification: Homogeneous Case
 
 When $\mu_1 = \mu_2 = \mu$:
 - $T_{\text{UB}} = \frac{3}{2} T_1$
@@ -94,7 +94,7 @@ $$T_{\text{UL}} = \left(1 - \frac{\rho}{4}\right)\frac{3}{2}T_1 + \frac{\rho}{4}
 
 This **exactly** recovers the Nelson-Tantawi result. ✓
 
-### 3.4 Properties
+### 4.4 Properties
 
 - ✓ Exact for homogeneous case ($\mu_1 = \mu_2$)
 - ✓ Satisfies $T_{\text{bot}} \leq T_{\text{UL}} \leq T_{\text{UB}}$ (since $0 \leq \alpha \leq 1/4 < 1$)
@@ -104,9 +104,9 @@ This **exactly** recovers the Nelson-Tantawi result. ✓
 
 ---
 
-## 4. Approximation Method 2: Light-Heavy Traffic Interpolation ($T_{\text{LH}}$)
+## 5. Approximation Method 2: Light-Heavy Traffic Interpolation ($T_{\text{LH}}$)
 
-### 4.1 Derivation Strategy
+### 5.1 Derivation Strategy
 
 Based on the methodology in Appendix A of the QC/HPC Resource Allocation paper (Reiman-Simon framework). Approximates $T(\lambda)$ with a rational form:
 
@@ -114,7 +114,7 @@ $$\tilde{T}(\rho) = \frac{a_0 + a_1\rho}{\mu_{\min}(1 - \rho)}$$
 
 where $\rho = \lambda/\mu_{\min}$ and $\mu_{\min} = \min(\mu_1, \mu_2)$ is the bottleneck server rate.
 
-### 4.2 Matching Conditions
+### 5.2 Matching Conditions
 
 **Condition 1 — Light traffic** ($\rho = 0$):
 
@@ -132,7 +132,7 @@ $$h = \lim_{\rho\to1} \mu_{\min}(1-\rho) \cdot T(\rho)$$
 
 This gives: $a_0 + a_1 = h$, so $a_1 = h - a_0$.
 
-### 4.3 The Heavy-Traffic Factor
+### 5.3 The Heavy-Traffic Factor
 
 The key insight is that $h$ depends on the heterogeneity ratio $r = \mu_{\max}/\mu_{\min} \geq 1$:
 
@@ -149,7 +149,7 @@ where $\beta > 0$ is a shape parameter (default $\beta = 10$, calibrated to simu
 - Monotonically decreasing ✓
 - Preserves the rational-function structure of $\tilde{T}(\rho)$ ✓
 
-### 4.4 The Formula
+### 5.4 The Formula
 
 Substituting $a_0$ and $a_1 = h(r) - a_0$ into the Reiman-Simon form:
 
@@ -166,7 +166,7 @@ $$T_{\text{LH}} = \frac{3/2 + (11/8 - 3/2)\rho}{\mu(1-\rho)} = \frac{3/2 - \rho/
 
 This **exactly** recovers the Nelson-Tantawi result for all $\rho$, regardless of $\beta$. ✓
 
-### 4.5 Implementation Note
+### 5.5 Implementation Note
 
 ```python
 from forkjoin import mean_response_time_lh
@@ -177,7 +177,7 @@ The transition from $h = 11/8$ to $h \approx 1$ is very sharp: $h \approx 1$ alr
 
 ---
 
-## 4b. Approximation Method 3: Enhanced LH ($T_{\text{LH}}^{\text{enh}}$)
+## 6. Approximation Method 3: Enhanced LH ($T_{\text{LH}}^{\text{enh}}$)
 
 Extends $T_{\text{LH}}$ by matching the first light-traffic derivative $f^{(1)}(0)$ as a third condition, yielding a quadratic numerator. See [`enhanced-lh-approximation.md`](enhanced-lh-approximation.md) for the full derivation.
 
@@ -194,9 +194,9 @@ At $r = 1$ (homogeneous), $c_2 = 0$ and $T_{\text{LH}}^{\text{enh}} \equiv T_{\t
 
 ---
 
-## 5. Numerical Results
+## 7. Numerical Results
 
-### 5.1 Comparison Table (β = 10)
+### 7.1 Comparison Table (β = 10)
 
 Results from discrete-event simulation (2M jobs per scenario, 100K warmup, seed 42):
 
@@ -214,7 +214,7 @@ Results from discrete-event simulation (2M jobs per scenario, 100K warmup, seed 
 | 1.0 | 3.0 | 0.6 | 0.60 | 2.500 | 2.546 | 2.554 | +0.28% | 2.583 | +1.45% | 2.560 |
 | 1.0 | 5.0 | 0.6 | 0.60 | 2.500 | 2.514 | 2.517 | +0.11% | 2.533 | +0.75% | 2.519 |
 
-### 5.2 Key Observations
+### 7.2 Key Observations
 
 **Homogeneous case** (μ₁ = μ₂ = 1.0): Both T_UL and T_LH are essentially exact (< 0.1%), recovering Nelson-Tantawi by construction.
 
@@ -224,9 +224,9 @@ Results from discrete-event simulation (2M jobs per scenario, 100K warmup, seed 
 
 ---
 
-## 6. Visual Comparison
+## 8. Visual Comparison
 
-### 6.1 Response Time vs Load
+### 8.1 Response Time vs Load
 
 ![Response Time vs Load](../examples/response_time_vs_load.png)
 
@@ -239,7 +239,7 @@ Results from discrete-event simulation (2M jobs per scenario, 100K warmup, seed 
 - Upper bound (T_UB) provides a conservative estimate
 - Lower bound (T_bot) becomes increasingly tight at high loads
 
-### 6.2 Response Time vs Heterogeneity
+### 8.2 Response Time vs Heterogeneity
 
 ![Response Time vs Heterogeneity](../examples/response_time_vs_heterogeneity.png)
 
@@ -254,9 +254,9 @@ Results from discrete-event simulation (2M jobs per scenario, 100K warmup, seed 
 
 ---
 
-## 7. Comparative Analysis
+## 9. Comparative Analysis
 
-### 7.1 Strengths and Weaknesses
+### 9.1 Strengths and Weaknesses
 
 | Aspect | T_UL (Upper-Lower) | T_LH (Light-Heavy) |
 |--------|-------------------|-------------------|
@@ -269,7 +269,7 @@ Results from discrete-event simulation (2M jobs per scenario, 100K warmup, seed 
 | **Theoretical basis** | Convex interpolation | Reiman-Simon rational approximation |
 | **Complexity** | Simple weighted average | Rational form with tunable β |
 
-### 7.2 Recommendations
+### 9.2 Recommendations
 
 **Use T_UL when:**
 - Guaranteed bounds are required (T_bot ≤ T ≤ T_UB)
@@ -289,19 +289,19 @@ Results from discrete-event simulation (2M jobs per scenario, 100K warmup, seed 
 
 ---
 
-## 8. Future Directions
+## 10. Future Directions
 
-### 8.1 Analytic Determination of β
+### 10.1 Analytic Determination of β
 
 A perturbation analysis of the Flatto-Hahn generating function near $r=1$ would yield $\partial h/\partial r|_{r=1}$, directly determining β (since $h'(1) = -3\beta/8$) without simulation calibration.
 
-### 8.2 Extension to More Servers
+### 10.2 Extension to More Servers
 
 All three methods extend naturally to $n > 2$ servers: T_UL via inclusion-exclusion bounds; T_LH and T_LH_enh via the same Reiman-Simon framework with $T_0 = E[\max(X_1,\ldots,X_K)]$ computed recursively.
 
 ---
 
-## 9. Conclusion
+## 11. Conclusion
 
 Three complementary closed-form approximations for the mean response time of heterogeneous 2-queue fork-join systems:
 
