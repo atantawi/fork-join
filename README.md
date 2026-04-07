@@ -218,43 +218,43 @@ where $c_0 = \mu_{\min}T_0$, $c_1 = \mu_{\min}^2 f^{(1)}(0) - \mu_{\min}T_0$, $c
 
 ### 8.1 UL and LH vs Simulation
 
-Results from discrete-event simulation (2,000,000 jobs per scenario, 100,000 warmup jobs, seed 42). $T_{\text{bot}}$, $T_{\text{UL}}$, $T_{\text{LH}}$ (with $\beta = 10$), and $T_{\text{UB}}$ compared against $T_{\text{sim}}$.
+Results from discrete-event simulation (20,000,000 jobs per scenario, 500,000 warmup jobs, 5 independent seeds; 95% CI via $t$-distribution across seeds). $T_{\text{bot}}$, $T_{\text{UL}}$, $T_{\text{LH}}$ (with $\beta = 10$), and $T_{\text{UB}}$ compared against $T_{\text{sim}}$.
 
-| $\mu_1$ | $\mu_2$ | $\lambda$ | $\rho_2$ | $T_{\text{bot}}$ | $T_{\text{sim}}$ | $T_{\text{UL}}$ | Err% | $T_{\text{LH}}$ | Err% | $T_{\text{UB}}$ |
-|:------:|:------:|:--------:|:-------:|:---------------:|:---------------:|:---------------:|:----:|:---------------:|:----:|:---------------:|
-| 1.0 | 1.0 | 0.3 | 0.30 | 1.429 | 2.088 | 2.089 | +0.06% | 2.089 | +0.06% | 2.143 |
-| 1.0 | 1.0 | 0.6 | 0.60 | 2.500 | 3.564 | 3.562 | −0.04% | 3.562 | −0.04% | 3.750 |
-| 1.0 | 1.0 | 0.9 | 0.90 | 10.000 | 13.886 | 13.875 | −0.08% | 13.875 | −0.08% | 15.000 |
-| 1.0 | 1.5 | 0.3 | 0.20 | 1.429 | 1.705 | 1.716 | +0.67% | 1.698 | −0.41% | 1.736 |
-| 1.0 | 1.5 | 0.6 | 0.40 | 2.500 | 2.767 | 2.799 | +1.16% | 2.776 | +0.34% | 2.842 |
-| 1.0 | 1.5 | 0.9 | 0.60 | 10.000 | 10.083 | 10.193 | +1.10% | 10.325 | +2.40% | 10.238 |
-| 1.0 | 2.0 | 0.3 | 0.15 | 1.429 | 1.582 | 1.590 | +0.54% | 1.595 | +0.85% | 1.600 |
-| 1.0 | 2.0 | 0.6 | 0.30 | 2.500 | 2.623 | 2.641 | +0.68% | 2.667 | +1.69% | 2.659 |
-| 1.0 | 2.0 | 0.9 | 0.45 | 10.000 | 9.990 | 10.063 | +0.73% | 10.170 | +1.80% | 10.076 |
-| 1.0 | 3.0 | 0.6 | 0.20 | 2.500 | 2.546 | 2.554 | +0.30% | 2.583 | +1.47% | 2.560 |
-| 1.0 | 5.0 | 0.6 | 0.12 | 2.500 | 2.514 | 2.517 | +0.11% | 2.533 | +0.77% | 2.519 |
+| $\mu_1$ | $\mu_2$ | $\lambda$ | $\rho_2$ | $T_{\text{bot}}$ | $T_{\text{sim}}$ | ±95% CI | $T_{\text{UL}}$ | Err% | $T_{\text{LH}}$ | Err% | $T_{\text{UB}}$ |
+|:------:|:------:|:--------:|:-------:|:---------------:|:---------------:|:-------:|:---------------:|:----:|:---------------:|:----:|:---------------:|
+| 1.0 | 1.0 | 0.3 | 0.30 | 1.429 | 2.089 | 0.001 | 2.089 | +0.01% | 2.089 | +0.01% | 2.143 |
+| 1.0 | 1.0 | 0.6 | 0.60 | 2.500 | 3.561 | 0.002 | 3.563 | +0.03% | 3.563 | +0.03% | 3.750 |
+| 1.0 | 1.0 | 0.9 | 0.90 | 10.000 | 13.855 | 0.061 | 13.875 | +0.15% | 13.875 | +0.15% | 15.000 |
+| 1.0 | 1.5 | 0.3 | 0.20 | 1.429 | 1.707 | 0.001 | 1.716 | +0.58% | 1.698 | −0.50% | 1.736 |
+| 1.0 | 1.5 | 0.6 | 0.40 | 2.500 | 2.767 | 0.001 | 2.799 | +1.16% | 2.776 | +0.34% | 2.842 |
+| 1.0 | 1.5 | 0.9 | 0.60 | 10.000 | 10.120 | 0.024 | 10.194 | +0.73% | 10.325 | +2.03% | 10.238 |
+| 1.0 | 2.0 | 0.3 | 0.15 | 1.429 | 1.583 | 0.001 | 1.591 | +0.45% | 1.595 | +0.76% | 1.600 |
+| 1.0 | 2.0 | 0.6 | 0.30 | 2.500 | 2.623 | 0.001 | 2.641 | +0.67% | 2.667 | +1.67% | 2.659 |
+| 1.0 | 2.0 | 0.9 | 0.45 | 10.000 | 10.028 | 0.024 | 10.063 | +0.35% | 10.170 | +1.42% | 10.076 |
+| 1.0 | 3.0 | 0.6 | 0.20 | 2.500 | 2.547 | 0.001 | 2.554 | +0.25% | 2.583 | +1.41% | 2.560 |
+| 1.0 | 5.0 | 0.6 | 0.12 | 2.500 | 2.515 | 0.001 | 2.517 | +0.07% | 2.533 | +0.71% | 2.519 |
 
 ### 8.2 Observations
 
-**Homogeneous case** ($\mu_1 = \mu_2 = 1.0$): Both $T_{\text{UL}}$ and $T_{\text{LH}}$ are essentially exact (errors $\leq 0.1\%$).
+**Homogeneous case** ($\mu_1 = \mu_2 = 1.0$): Both $T_{\text{UL}}$ and $T_{\text{LH}}$ recover the exact Nelson-Tantawi formula; residual errors ($\leq 0.15\%$) are within simulation variance, shrinking toward zero as $n_{\text{jobs}} \to \infty$.
 
-**Moderate heterogeneity** ($r = 1.5$): $T_{\text{UL}}$ errors $+0.67\%$ to $+1.16\%$; $T_{\text{LH}}$ errors $-0.41\%$ to $+2.40\%$ (worst at heavy load).
+**Moderate heterogeneity** ($r = 1.5$): $T_{\text{UL}}$ errors $+0.58\%$ to $+1.16\%$; $T_{\text{LH}}$ errors $-0.50\%$ to $+2.03\%$ (worst at heavy load). The previous 2M-job estimate at $\lambda=0.9$ was biased low by $\approx 0.37\%$ due to high response-time variance; 20M jobs correct this.
 
-**High heterogeneity** ($r \geq 2$): $T_{\text{UL}}$ errors $\leq 0.73\%$ (to $0.11\%$ at $r=5$); $T_{\text{LH}}$ errors $\leq 1.80\%$.
+**High heterogeneity** ($r \geq 2$): $T_{\text{UL}}$ errors $\leq 0.67\%$ (to $0.07\%$ at $r=5$); $T_{\text{LH}}$ errors $\leq 1.67\%$.
 
 ### 8.3 Enhanced LH vs LH vs Simulation
 
-| $\mu_1$ | $\mu_2$ | $\lambda$ | $T_{\text{sim}}$ | $T_{\text{LH}}$ | Err% | $T_{\text{LH}}^{\text{enh}}$ | Err% |
-|:------:|:------:|:--------:|:---------------:|:---------------:|:----:|:----------------------------:|:----:|
-| 1.0 | 1.0 | 0.3 | 2.088 | 2.089 | +0.07% | 2.089 | +0.07% |
-| 1.0 | 1.0 | 0.9 | 13.886 | 13.875 | −0.08% | 13.875 | −0.08% |
-| 1.0 | 1.5 | 0.6 | 2.767 | 2.776 | +0.35% | 2.801 | +1.25% |
-| 1.0 | 1.5 | 0.9 | 10.083 | 10.325 | +2.41% | 10.362 | +2.77% |
-| 1.0 | 2.0 | 0.6 | 2.623 | 2.667 | +1.70% | 2.654 | +1.20% |
-| 1.0 | 3.0 | 0.6 | 2.546 | 2.583 | +1.45% | 2.561 | +0.57% |
-| 1.0 | 5.0 | 0.6 | 2.514 | 2.533 | +0.75% | 2.519 | +0.19% |
+| $\mu_1$ | $\mu_2$ | $\lambda$ | $T_{\text{sim}}$ | ±95% CI | $T_{\text{LH}}$ | Err% | $T_{\text{LH}}^{\text{enh}}$ | Err% |
+|:------:|:------:|:--------:|:---------------:|:-------:|:---------------:|:----:|:----------------------------:|:----:|
+| 1.0 | 1.0 | 0.3 | 2.089 | 0.001 | 2.089 | +0.01% | 2.089 | +0.01% |
+| 1.0 | 1.0 | 0.9 | 13.855 | 0.061 | 13.875 | +0.15% | 13.875 | +0.15% |
+| 1.0 | 1.5 | 0.6 | 2.767 | 0.001 | 2.776 | +0.34% | 2.801 | +1.23% |
+| 1.0 | 1.5 | 0.9 | 10.120 | 0.024 | 10.325 | +2.03% | 10.362 | +2.39% |
+| 1.0 | 2.0 | 0.6 | 2.623 | 0.001 | 2.667 | +1.67% | 2.654 | +1.17% |
+| 1.0 | 3.0 | 0.6 | 2.547 | 0.001 | 2.583 | +1.41% | 2.561 | +0.54% |
+| 1.0 | 5.0 | 0.6 | 2.515 | 0.001 | 2.533 | +0.71% | 2.519 | +0.16% |
 
-$T_{\text{LH}}^{\text{enh}}$ improves on $T_{\text{LH}}$ for $r \geq 2$ (30–75% error reduction) but offers no benefit at $r = 1.5$.
+$T_{\text{LH}}^{\text{enh}}$ improves on $T_{\text{LH}}$ for $r \geq 2$ (error reductions of 30–76%) but is slightly worse at $r = 1.5$, a regime where the accuracy of the $h(r)$ model limits both LH variants.
 
 ---
 
@@ -279,8 +279,8 @@ Additional functions: `upper_bound_independent`, `lower_bound_bottleneck`, `uppe
 Three closed-form approximations for the heterogeneous 2-queue fork-join mean response time:
 
 1. **$T_{\text{UL}}$** — convex combination of bounds; always within bounds; errors $\leq 1.2\%$. Recommended default.
-2. **$T_{\text{LH}}$** — zero-order Reiman-Simon; matches $f^{(0)}(0)$ and $h$; errors $\leq 2.4\%$.
-3. **$T_{\text{LH}}^{\text{enh}}$** — first-order Reiman-Simon; additionally matches $f^{(1)}(0)$; strictly better than $T_{\text{LH}}$ for $r \geq 2$; identical at $r=1$. See [`docs/enhanced-lh-approximation.md`](docs/enhanced-lh-approximation.md).
+2. **$T_{\text{LH}}$** — zero-order Reiman-Simon; matches $f^{(0)}(0)$ and $h$; errors $\leq 2.0\%$.
+3. **$T_{\text{LH}}^{\text{enh}}$** — first-order Reiman-Simon; additionally matches $f^{(1)}(0)$; strictly better than $T_{\text{LH}}$ for $r \geq 2$; identical at $r=1$; slightly worse at $r=1.5$. See [`docs/enhanced-lh-approximation.md`](docs/enhanced-lh-approximation.md).
 
 ---
 
