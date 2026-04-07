@@ -3,6 +3,7 @@
 from .analytical import (
     mean_response_time,
     mean_response_time_lh,
+    mean_response_time_lh_enhanced,
     upper_bound_independent,
     lower_bound_bottleneck,
     upper_bound_split_merge,
@@ -13,6 +14,7 @@ from .simulation import simulate
 __all__ = [
     "mean_response_time",
     "mean_response_time_lh",
+    "mean_response_time_lh_enhanced",
     "upper_bound_independent",
     "lower_bound_bottleneck",
     "upper_bound_split_merge",

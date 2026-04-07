@@ -18,12 +18,14 @@ def plot_vs_load(mu1, mu2, lam_points=50, run_simulation=True, n_jobs=500_000):
 
     t_approx = [analytical.mean_response_time(l, mu1, mu2) for l in lams]
     t_lh = [analytical.mean_response_time_lh(l, mu1, mu2) for l in lams]
+    t_lhe = [analytical.mean_response_time_lh_enhanced(l, mu1, mu2) for l in lams]
     t_ub = [analytical.upper_bound_independent(l, mu1, mu2) for l in lams]
     t_bot = [analytical.lower_bound_bottleneck(l, mu1, mu2) for l in lams]
 
     fig, ax = plt.subplots(figsize=(8, 5))
-    ax.plot(loads, t_approx, "b-", linewidth=2, label="Approximation")
-    ax.plot(loads, t_lh, "m-", linewidth=2, label="LH interpolation")
+    ax.plot(loads, t_approx, "b-", linewidth=2, label=r"$T_{\mathrm{UL}}$")
+    ax.plot(loads, t_lh, "m-", linewidth=2, label=r"$T_{\mathrm{LH}}$")
+    ax.plot(loads, t_lhe, "c-", linewidth=2, label=r"$T_{\mathrm{LH}}^{\mathrm{enh}}$")
     ax.plot(loads, t_ub, "r--", linewidth=1.5, label="Upper bound (indep.)")
     ax.plot(loads, t_bot, "g--", linewidth=1.5, label="Lower bound (bottleneck)")
 
@@ -56,12 +58,14 @@ def plot_vs_heterogeneity(mu1, lam, mu2_range, run_simulation=True, n_jobs=500_0
 
     t_approx = [analytical.mean_response_time(lam, mu1, m) for m in mu2_arr]
     t_lh = [analytical.mean_response_time_lh(lam, mu1, m) for m in mu2_arr]
+    t_lhe = [analytical.mean_response_time_lh_enhanced(lam, mu1, m) for m in mu2_arr]
     t_ub = [analytical.upper_bound_independent(lam, mu1, m) for m in mu2_arr]
     t_bot = [analytical.lower_bound_bottleneck(lam, mu1, m) for m in mu2_arr]
 
     fig, ax = plt.subplots(figsize=(8, 5))
-    ax.plot(ratios, t_approx, "b-", linewidth=2, label="Approximation")
-    ax.plot(ratios, t_lh, "m-", linewidth=2, label="LH interpolation")
+    ax.plot(ratios, t_approx, "b-", linewidth=2, label=r"$T_{\mathrm{UL}}$")
+    ax.plot(ratios, t_lh, "m-", linewidth=2, label=r"$T_{\mathrm{LH}}$")
+    ax.plot(ratios, t_lhe, "c-", linewidth=2, label=r"$T_{\mathrm{LH}}^{\mathrm{enh}}$")
     ax.plot(ratios, t_ub, "r--", linewidth=1.5, label="Upper bound (indep.)")
     ax.plot(ratios, t_bot, "g--", linewidth=1.5, label="Lower bound (bottleneck)")
 

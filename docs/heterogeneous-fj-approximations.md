@@ -62,13 +62,14 @@ The gap $T_{\text{UB}} - T_{\text{bot}}$ shrinks as heterogeneity increases. In 
 
 ---
 
-## 3. Two Approximation Methods
+## 3. Approximation Methods
 
-We present two complementary closed-form approximations. Both reduce to the Nelson-Tantawi result in the homogeneous case and respect the correct limiting behavior in light and heavy traffic.
+We present three closed-form approximations. All reduce to the Nelson-Tantawi result in the homogeneous case and respect the correct limiting behavior in light and heavy traffic.
 
 ---
 
 ## 4. Method 1: Upper-Lower Bound Interpolation ($T_{\text{UL}}$)
+
 
 ### 4.1 Strategy
 
@@ -186,27 +187,50 @@ This recovery holds for **all** $\rho$, regardless of $\beta$.
 
 ---
 
-## 6. Comparison of the Two Methods
+## 6. Method 3: Enhanced Light-Heavy Traffic Interpolation ($T_{\text{LH}}^{\text{enh}}$)
 
-| Aspect | $T_{\text{UL}}$ (Bound Interpolation) | $T_{\text{LH}}$ (Traffic Interpolation) |
-|--------|--------------------------------------|----------------------------------------|
-| **Homogeneous case** | Exact (by construction) | Exact (by construction) |
-| **Light traffic** | $T \to T_{\text{UB}}$ | $T \to T_0$ (same limit) |
-| **Heavy traffic** | $T/T_{\text{bot}} \to 1$ | $T \sim h(r)/(\mu_{\min}-\lambda)$ |
-| **Bound compliance** | Always ($T_{\text{bot}} \leq T_{\text{UL}} \leq T_{\text{UB}}$) | Not guaranteed |
-| **Theoretical basis** | Convex interpolation of bounds | Reiman-Simon rational approximation |
-| **Parameters** | None | $\beta$ (default 10) |
-| **Typical errors (heterogeneous)** | $\leq 1.2\%$ | $\leq 2.4\%$ (at $r = 1.5$) |
+The enhanced LH extends $T_{\text{LH}}$ by matching the first light-traffic derivative $f^{(1)}(0)$ as a third condition, yielding a quadratic numerator. See [`enhanced-lh-approximation.md`](enhanced-lh-approximation.md) for the full derivation.
 
-The methods are **complementary**:
-- $T_{\text{UL}}$ provides guaranteed bounds and is more accurate at high heterogeneity.
-- $T_{\text{LH}}$ is grounded in the Reiman-Simon framework and is exact at both traffic extremes by design; its $\beta$ parameter can be further refined via simulation.
+The first derivative (Lemma 2 of [1]) is:
+
+$$f^{(1)}(0) = \frac{1}{\mu_{\min}^2} + \frac{1}{\mu_{\max}^2} - \frac{2}{(\mu_{\min}+\mu_{\max})^2} - \frac{2\mu_{\min}\mu_{\max}}{(\mu_{\min}+\mu_{\max})^4}$$
+
+The three coefficients are:
+
+$$c_0 = \mu_{\min} T_0, \qquad c_1 = \mu_{\min}^2 f^{(1)}(0) - \mu_{\min} T_0, \qquad c_2 = h - c_1 - c_0$$
+
+and the formula is:
+
+$$\boxed{T_{\text{LH}}^{\text{enh}} = \frac{c_2\,\rho^2 + c_1\,\rho + c_0}{\mu_{\min}(1-\rho)}}$$
+
+In the homogeneous case ($\mu_1 = \mu_2$), $c_2 = 0$ and $T_{\text{LH}}^{\text{enh}} \equiv T_{\text{LH}}$.
 
 ---
 
-## 7. Numerical Results
+## 7. Comparison of Methods
 
-Results from discrete-event simulation (2,000,000 jobs per scenario, 100,000 warmup jobs, seed 42). All four quantities — $T_{\text{bot}}$, $T_{\text{UL}}$, $T_{\text{LH}}$ (with $\beta = 10$), and $T_{\text{UB}}$ — are compared against $T_{\text{sim}}$.
+| Aspect | $T_{\text{UL}}$ | $T_{\text{LH}}$ | $T_{\text{LH}}^{\text{enh}}$ |
+|--------|:---:|:---:|:---:|
+| **Homogeneous case** | Exact | Exact | Exact |
+| **Light traffic ($f^{(0)}$)** | ✓ | ✓ | ✓ |
+| **Light traffic ($f^{(1)}$)** | — | — | ✓ |
+| **Heavy-traffic limit** | ✓ | ✓ | ✓ |
+| **Bound compliance** | Always | Not guaranteed | Not guaranteed |
+| **Theoretical basis** | Convex interpolation | Reiman-Simon (0th order) | Reiman-Simon (1st order) |
+| **Numerator degree** | — | 1 | 2 |
+| **Parameters** | None | $\beta=10$ | $\beta=10$ |
+| **Max error ($r \geq 2$)** | $\leq 0.73\%$ | $\leq 1.80\%$ | $\leq 1.60\%$ |
+| **Max error ($r = 1.5$)** | $\leq 1.16\%$ | $\leq 2.41\%$ | $\leq 2.77\%$ |
+
+---
+
+## 8. Numerical Results
+
+Results from discrete-event simulation (2,000,000 jobs per scenario, 100,000 warmup jobs, seed 42).
+
+### 8.1 UL and LH vs Simulation
+
+All four quantities — $T_{\text{bot}}$, $T_{\text{UL}}$, $T_{\text{LH}}$ (with $\beta = 10$), and $T_{\text{UB}}$ — are compared against $T_{\text{sim}}$.
 
 | $\mu_1$ | $\mu_2$ | $\lambda$ | $\rho_2$ | $T_{\text{bot}}$ | $T_{\text{sim}}$ | $T_{\text{UL}}$ | Err% | $T_{\text{LH}}$ | Err% | $T_{\text{UB}}$ |
 |:------:|:------:|:--------:|:-------:|:---------------:|:---------------:|:---------------:|:----:|:---------------:|:----:|:---------------:|
@@ -222,7 +246,7 @@ Results from discrete-event simulation (2,000,000 jobs per scenario, 100,000 war
 | 1.0 | 3.0 | 0.6 | 0.20 | 2.500 | 2.546 | 2.554 | +0.30% | 2.583 | +1.47% | 2.560 |
 | 1.0 | 5.0 | 0.6 | 0.12 | 2.500 | 2.514 | 2.517 | +0.11% | 2.533 | +0.77% | 2.519 |
 
-### 7.1 Observations
+### 8.2 Observations
 
 **Homogeneous case** ($\mu_1 = \mu_2 = 1.0$):
 Both $T_{\text{UL}}$ and $T_{\text{LH}}$ are essentially exact (errors $\leq 0.1\%$). This is expected: both are designed to recover the Nelson-Tantawi result exactly in this regime.
@@ -231,7 +255,7 @@ Both $T_{\text{UL}}$ and $T_{\text{LH}}$ are essentially exact (errors $\leq 0.1
 - $T_{\text{UL}}$: errors $+0.67\%$ to $+1.16\%$ (slight systematic overestimate)
 - $T_{\text{LH}}$: errors $-0.41\%$ to $+2.40\%$ (mixed sign; worst at heavy load)
 
-The $T_{\text{LH}}$ error at $(r=1.5, \rho=0.9)$ of $+2.40\%$ reflects the inherent limitation of the linear Reiman-Simon numerator at near-homogeneous, heavy-load operating points — a regime where the two effects (heterogeneity and load) interact. The parameter $\beta$ has limited ability to resolve this without a higher-order (quadratic) approximation (see Section 9.1).
+The $T_{\text{LH}}$ error at $(r=1.5, \rho=0.9)$ of $+2.40\%$ reflects the inherent limitation of the linear Reiman-Simon numerator at near-homogeneous, heavy-load operating points.
 
 **High heterogeneity** ($r \geq 2$):
 - $T_{\text{UL}}$: errors $\leq 0.73\%$, improving to $\leq 0.11\%$ at $r = 5$
@@ -239,39 +263,63 @@ The $T_{\text{LH}}$ error at $(r=1.5, \rho=0.9)$ of $+2.40\%$ reflects the inher
 
 As heterogeneity increases, both $T_{\text{UB}}$ and $T_{\text{LH}}$ converge to $T_{\text{bot}}$ from above, and $T_{\text{UL}}$ tracks the simulation closely. In this regime the faster server's contribution to $E[\max(R_1, R_2)]$ is negligible; all that matters is the bottleneck M/M/1.
 
+### 8.3 Enhanced LH vs LH vs Simulation
+
+| $\mu_1$ | $\mu_2$ | $\lambda$ | $T_{\text{sim}}$ | $T_{\text{LH}}$ | Err% | $T_{\text{LH}}^{\text{enh}}$ | Err% |
+|:------:|:------:|:--------:|:---------------:|:---------------:|:----:|:----------------------------:|:----:|
+| 1.0 | 1.0 | 0.3 | 2.088 | 2.089 | +0.07% | 2.089 | +0.07% |
+| 1.0 | 1.0 | 0.9 | 13.886 | 13.875 | −0.08% | 13.875 | −0.08% |
+| 1.0 | 1.5 | 0.6 | 2.767 | 2.776 | +0.35% | 2.801 | +1.25% |
+| 1.0 | 1.5 | 0.9 | 10.083 | 10.325 | +2.41% | 10.362 | +2.77% |
+| 1.0 | 2.0 | 0.6 | 2.623 | 2.667 | +1.70% | 2.654 | +1.20% |
+| 1.0 | 3.0 | 0.6 | 2.546 | 2.583 | +1.45% | 2.561 | +0.57% |
+| 1.0 | 5.0 | 0.6 | 2.514 | 2.533 | +0.75% | 2.519 | +0.19% |
+
+$T_{\text{LH}}^{\text{enh}}$ is better than $T_{\text{LH}}$ for $r \geq 2$ (up to 75% error reduction at $r=5$) but offers no improvement at $r=1.5$, where the $h(r)$ model accuracy is the binding constraint.
+
 ---
 
-## 8. Summary
+## 9. Code
 
-The two approximation methods address the lack of a closed-form mean response time for the heterogeneous 2-queue fork-join system:
+All three approximations are implemented in `forkjoin/analytical.py`:
 
-1. **$T_{\text{UL}}$ (bound interpolation):** A convex combination of the independent upper bound and the bottleneck lower bound, weighted by the average utilization. Exact for the homogeneous case, always within bounds, with errors below $1.2\%$ across all tested scenarios. Recommended as the default.
+```python
+from forkjoin import mean_response_time, mean_response_time_lh, mean_response_time_lh_enhanced
 
-2. **$T_{\text{LH}}$ (light-heavy traffic interpolation):** A rational Reiman-Simon approximation matching the light-traffic value exactly and the heavy-traffic limit via the factor $h(r) = 1 + \tfrac{3}{8}\,r^{-\beta}$. Exact for the homogeneous case. Maximum errors $\approx 2.4\%$ in tested scenarios. The parameter $\beta$ can be refined via simulation; a quadratic numerator (Section 9.1) could further improve accuracy.
+T_UL  = mean_response_time(lam=0.6, mu1=1.0, mu2=2.0)
+T_LH  = mean_response_time_lh(lam=0.6, mu1=1.0, mu2=2.0)
+T_LHe = mean_response_time_lh_enhanced(lam=0.6, mu1=1.0, mu2=2.0)
+```
 
-Both methods are closed-form, computationally trivial, and calibrated to be exact in the homogeneous limit.
+Additional functions: `upper_bound_independent`, `lower_bound_bottleneck`, `upper_bound_split_merge`, `nelson_tantawi` (homogeneous exact).
 
 ---
 
-## 9. Future Directions
+## 10. Summary
 
-### 9.1 Quadratic Reiman-Simon Approximation for $T_{\text{LH}}$
+Three approximation methods for the heterogeneous 2-queue fork-join mean response time:
 
-The current $T_{\text{LH}}$ uses a linear numerator, matching two conditions. A quadratic numerator $a_0 + a_1\rho + a_2\rho^2$ would match three conditions: the two above plus the first light-traffic derivative $f'(0)$, which Reiman and Simon [4] express as:
+1. **$T_{\text{UL}}$** — convex combination of bounds, always within bounds, errors $\leq 1.2\%$. Recommended as the default.
 
-$$\frac{df}{d\rho}\bigg|_{\rho=0} = \mu_{\min} \int_{-\infty}^{+\infty} \left[\hat{f}(\{t\}) - \hat{f}(\emptyset)\right] dt$$
+2. **$T_{\text{LH}}$** — zero-order Reiman-Simon, matches $f^{(0)}(0)$ and $h$. Exact for homogeneous case; errors $\leq 2.4\%$.
 
-where $\hat{f}(\emptyset) = T_0$ is the unconditional light-traffic value and $\hat{f}(\{t\})$ is the conditional expected response time given one prior arrival at time $t$. Computing this requires an analysis of the joint queue state conditioned on one background customer, which is non-trivial but feasible. Matching this derivative would reduce the approximation error in the near-homogeneous, heavy-load regime and may also determine $\beta$ analytically.
+3. **$T_{\text{LH}}^{\text{enh}}$** — first-order Reiman-Simon, additionally matches $f^{(1)}(0)$. Strictly better than $T_{\text{LH}}$ for $r \geq 2$; identical at $r=1$. See [`enhanced-lh-approximation.md`](enhanced-lh-approximation.md).
 
-### 9.2 Analytic Determination of $\beta$
+All three are closed-form, computationally trivial, and exact in the homogeneous limit.
 
-The sharp transition of $h(r)$ near $r = 1$ is a structural property of the heterogeneous fork-join system. A perturbation analysis of the Flatto-Hahn generating function [1] near $r = 1$ would yield $\partial h/\partial r|_{r=1}$, which directly determines $\beta$ (since $h'(1) = -3\beta/8$). This would fully close the approximation without requiring simulation calibration.
+---
 
-### 9.3 Extension to $K > 2$ Servers
+## 11. Future Directions
 
-Both methods extend naturally to larger systems:
-- $T_{\text{UL}}$ can use the independent upper bound $T_{\text{UB}} = \sum_{i=1}^{K} 1/(\mu_i - \lambda) - \ldots$ (inclusion-exclusion) and the bottleneck lower bound.
-- $T_{\text{LH}}$ can employ the same Reiman-Simon framework, with $T_0 = E[\max(X_1, \ldots, X_K)]$ for independent exponentials computed recursively.
+### 11.1 Analytic Determination of $\beta$
+
+A perturbation analysis of the Flatto-Hahn generating function near $r = 1$ would yield $\partial h/\partial r|_{r=1}$, which directly determines $\beta$ (since $h'(1) = -3\beta/8$), fully closing the approximation without simulation calibration.
+
+### 11.2 Extension to $K > 2$ Servers
+
+All three methods extend naturally:
+- $T_{\text{UL}}$ can use the inclusion-exclusion independent upper bound and the bottleneck lower bound.
+- $T_{\text{LH}}$ and $T_{\text{LH}}^{\text{enh}}$ can use the same Reiman-Simon framework with $T_0 = E[\max(X_1, \ldots, X_K)]$ computed recursively for independent exponentials.
 
 ---
 
