@@ -1,7 +1,7 @@
 \section{Conclusion}
 \label{sec:conclusion}
 
-We have presented two closed-form approximations for the mean response time
+We have presented three closed-form approximations for the mean response time
 of a heterogeneous two-queue M/M/1 fork-join system with service rates
 $\mu_1 \geq \mu_2$ and Poisson arrival rate $\lambda$.
 
@@ -19,18 +19,27 @@ The second, the \emph{light-heavy traffic interpolation}:
               {\mumin - \lambda},
   \qquad h(r) = 1 + \frac{3}{8}\,r^{-\beta},
 \end{equation}
-is grounded in the Reiman--Simon framework, matching the exact light-traffic
-value and a heterogeneity-adjusted heavy-traffic limit, with errors below $2.5\%$.
+is grounded in the Reiman--Simon framework, matching the zeroth light-traffic
+derivative and a heterogeneity-adjusted heavy-traffic limit, with errors
+below $2.5\%$.
 
-Both approximations recover the Nelson--Tantawi exact formula in the homogeneous
-case, exhibit the correct singularity in heavy traffic, and are validated
-against simulation to within $2.5\%$ across a wide range of loads and
+The third, the \emph{enhanced light-heavy traffic interpolation}:
+\begin{equation}
+  \Tlhe = \frac{c_2\,\rho^2 + c_1\,\rho + c_0}{\mumin(1-\rho)},
+\end{equation}
+extends $\Tlh$ to a quadratic numerator by additionally matching the first
+light-traffic derivative $f^{(1)}(0)$.
+It is strictly more accurate than $\Tlh$ for $r \geq 2$ (errors up to
+$75\%$ smaller at high heterogeneity) while being identical to $\Tlh$ at
+$r = 1$.
+
+All three approximations recover the Nelson--Tantawi exact formula in the
+homogeneous case, exhibit the correct singularity in heavy traffic, and are
+validated against simulation across a wide range of loads and
 heterogeneity levels.
 
-Future directions include: (i)~extending $\Tlh$ to a quadratic Reiman--Simon
-numerator by computing the first light-traffic derivative $f'(0)$,
-which may further reduce errors and enable an analytic determination of $\beta$;
-(ii)~deriving the slope $\partial h/\partial r|_{r=1}$ from a perturbation
-analysis of the Flatto--Hahn generating function, which would close $\beta$
-without requiring simulation calibration; and
-(iii)~extending both methods to systems with more than two servers.
+Future directions include: (i)~analytically determining $\beta$ by
+deriving the slope $\partial h/\partial r|_{r=1}$ from a perturbation
+analysis of the Flatto--Hahn generating function, which would close the
+Reiman--Simon approximations without requiring simulation calibration; and
+(ii)~extending all three methods to systems with more than two servers.
