@@ -41,7 +41,12 @@ Research project on **fork-join (FJ) queues** — a queueing model where arrivin
 
 - `lambda`: Poisson job arrival rate
 - `mu`, `mu_i`: exponential service rate(s)
+- `mu_min = min(mu_1, mu_2)`, `mu_max = max(mu_1, mu_2)`: bottleneck and faster server rates
 - `rho = lambda/mu`: server utilization (homogeneous case)
+- `rho_i = lambda/mu_i`: utilization of server i (heterogeneous case)
+- `r = mu_max/mu_min`: heterogeneity ratio (r=1 homogeneous, r→∞ highly heterogeneous)
 - `T`, `T_K`: mean job response time (K queues)
 - `n` or `K`: number of parallel queues/servers
 - `H_K`: harmonic number sum(1/i, i=1..K)
+- `T0 = 1/mu_1 + 1/mu_2 - 1/(mu_1+mu_2)`: light-traffic limit (E[max(X_1,X_2)] at lambda=0)
+- `h(r) = 1 + 3/8 * r^(-beta)`: heavy-traffic factor; h(1)=11/8, h→1 as r→∞
