@@ -81,9 +81,8 @@ def main():
     ax.xaxis.set_minor_formatter(ticker.NullFormatter())
     ax.set_ylim(0, 24)
     ax.grid(True, alpha=0.3, which="both")
-    ax.set_xlabel(r"$r = \mu_2 / \mu_1$", fontsize=11)
-    ax.set_ylabel(r"Mean response time $T$", fontsize=11)
-    ax.set_title(r"$T_{\mathrm{UL}}$ vs Simulation (95% CI)", fontsize=12)
+    ax.set_xlabel(r"$r = \hat{\mu}_2 / \hat{\mu}_1$", fontsize=11)
+    ax.set_ylabel(r"$\mathbb{E}[T_{FJ}]$", fontsize=11)
 
     legend_handles = [
         Line2D([0], [0], color=c, linewidth=2, marker=m, markersize=6,
