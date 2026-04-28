@@ -49,15 +49,6 @@ legend_handles = [
 ]
 ax.legend(handles=legend_handles, fontsize=10, loc="upper right")
 
-ax.set_title(
-    r"Sequential Phase Sojourn Time $\mathbb{E}[T_{PF}]$ (Eq. 2)"
-    "\n"
-    r"$\hat{\mu}_1 = \hat{\mu}_3 = 1,\;"
-    r"\hat{\mu}_2 = \hat{\mu}_4 = r,\;"
-    r"p_\circ = 0.5$",
-    fontsize=11,
-)
-
 out_dir = Path(__file__).parent / "figures"
 out_dir.mkdir(exist_ok=True)
 fig.savefig(out_dir / "t_pf_sequential_phase_v2.pdf", bbox_inches="tight")
