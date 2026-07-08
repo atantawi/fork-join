@@ -281,6 +281,15 @@ python examples/validate_multiseed.py --quick    # fast smoke test (5 seeds x 20
 
 Per-seed means are cached in `examples/validate_multiseed_cache.json` so reruns are instant. Near saturation ($\rho \geq 0.9$) a single-seed run underestimates the CI because consecutive response times are highly correlated; the multi-seed t-interval is the reliable measure.
 
+**Regenerating artifacts.** Generated outputs (the compiled PDF, figures, and simulation caches) are not tracked in git — see `.gitignore`. Regenerate them locally as needed:
+
+```bash
+latexmk -pdf docs/paper/main.tex                            # docs/paper/main.pdf
+python examples/generate_t_ul_plots.py                      # examples/t_ul_sim_cache.json + T_UL figures
+python docs/paper/compact_table/generate_compact_table.py   # docs/paper/compact_table/sim_cache.json + compact table
+python examples/validate_multiseed.py                       # examples/validate_multiseed_cache.json (validation tables)
+```
+
 ---
 
 ## 10. Summary
