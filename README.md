@@ -284,7 +284,7 @@ Per-seed means are cached in `examples/validate_multiseed_cache.json` so reruns 
 **Regenerating artifacts.** Generated outputs (the compiled PDF, figures, and simulation caches) are not tracked in git — see `.gitignore`. Regenerate them locally as needed:
 
 ```bash
-latexmk -pdf docs/paper/main.tex                            # docs/paper/main.pdf
+latexmk -pdf -cd docs/paper/main.tex                        # docs/paper/main.pdf
 python examples/generate_t_ul_plots.py                      # examples/t_ul_sim_cache.json + T_UL figures
 python docs/paper/compact_table/generate_compact_table.py   # docs/paper/compact_table/sim_cache.json + compact table
 python examples/validate_multiseed.py                       # examples/validate_multiseed_cache.json (validation tables)
