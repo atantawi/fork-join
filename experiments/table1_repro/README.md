@@ -58,6 +58,22 @@ so re-runs are instant. Outputs:
 An extra homogeneous row (`r=1`) is simulated as a sanity check (recovers
 Nelson–Tantawi to the third decimal) but is not part of the main `{2,4,8}` table.
 
+## Rendering a table to PDF
+
+`table1.tex` / `table1_paperexact.tex` are table *fragments* (they use
+`\toprule`, `\multirow`, the `\ex[...]` operator, and `\eqref{...}` refs to the
+paper), so they need a small wrapper before they compile. `table1_preview.tex`
+is that wrapper (defines `\ex`, drops the paper cross-refs, loads
+`booktabs`/`multirow`):
+
+```bash
+latexmk -pdf table1_preview.tex        # -> table1_preview.pdf
+```
+
+`latexmk` runs `pdflatex` the required 2× (for `\multirow`). To preview the
+published-numbers table instead, edit the `\input{...}` line in
+`table1_preview.tex` to point at `table1_paperexact.tex`.
+
 ## Two findings worth reconciling before publication
 
 ### 1. The published Table 1 does not use the protocol the text describes
