@@ -20,3 +20,6 @@ examples/validate_multiseed_cache.json
 examples/t_ul_sim_cache.json
 docs/paper/compact_table/sim_cache.json
 .DS_Store
+
+# Table 1 reproduction sim cache (regenerable)
+experiments/table1_repro/table1_results.json
