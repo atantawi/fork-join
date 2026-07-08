@@ -12,4 +12,9 @@ claude-contexts/
 *.blg
 *.log
 *.out
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+docs/paper/main.pdf
+examples/validate_multiseed_cache.json
 .DS_Store
