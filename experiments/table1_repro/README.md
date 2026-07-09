@@ -54,6 +54,9 @@ so re-runs are instant. Outputs:
 - `table1.tex` — correct-protocol LaTeX table (5-seed t-CI)
 - `table1_paperexact.tex` — exact reproduction of the published numbers
 - `table1_errors.{png,pdf}` — relative-error bar chart
+- `eq23_vs_eq14_comparison.md` — full 12-cell eq. 23 vs eq. 14 write-up (Finding 2)
+- `eq23_vs_eq14.{png,pdf}` — eq. 23 vs eq. 14 comparison figure
+  (`generate_eq23_vs_eq14_plot.py`)
 
 An extra homogeneous row (`r=1`) is simulated as a sanity check (recovers
 Nelson–Tantawi to the third decimal) but is not part of the main `{2,4,8}` table.
@@ -110,8 +113,6 @@ the text describes, or change the text to match the single-seed method used.**
 
 ### 2. `E[T_FJ^(1)]` column vs. eq. 14 as typeset
 
-## Note: `E[T_FJ^(1)]` and eq. 14 as typeset
-
 The paper's **Table 1 `E[T_FJ^(1)]` column matches the repo's quadratic enhanced-LH
 formula** (`mean_response_time_lh_enhanced`, i.e. `docs/paper` eq. 23):
 
@@ -129,10 +130,19 @@ E[T_FJ^(1)] = gamma/(mu_1 − gamma) · ( 1/mu_1 + mu_1/mu_2² − 2mu_1/(mu_1+m
               − 2mu_1²mu_2/(mu_1+mu_2)⁴ ) + (mu_1²+mu_1mu_2+mu_2²)/(mu_1mu_2(mu_1+mu_2))
 ```
 
-which **does not reproduce the table** (it drops the heavy-traffic/quadratic
-structure). Examples:
+This is **exactly eq. 23 with `c2` set to 0** (verified algebraically), so it
+drops the heavy-traffic/quadratic anchoring and **does not reproduce the table**.
 
-| rho, r | table `T_FJ^(1)` (repo quadratic) | eq. 14 as typeset |
+**Full-grid comparison (all 12 Table 1 cells), not just the 3 originally
+flagged:** eq. 23 is uniformly larger than eq. 14 — by the dropped term
+`c2·rho²/(mu_min·(1−rho))` — with the relative gap ranging **+0.18% to +2.81%**
+(mean +1.35%). The gap grows toward saturation and is *non-monotonic in `r`*,
+peaking at `r=4` (because `c2` peaks there and → 0 as `r → ∞`). Against
+simulation, the quadratic eq. 23 has mean |error| **0.36%** (more accurate in
+**9/12** cells) vs **1.11%** for eq. 14, which under-predicts systematically at
+moderate-to-heavy load (worst −2.99% at `rho=0.95, r=4`).
+
+| rho, r | table `T_FJ^(1)` (repo quadratic, eq. 23) | eq. 14 as typeset (c2=0) |
 |---|---|---|
 | 0.4, 2  | 1.825  | 1.819  |
 | 0.8, 2  | 5.151  | 5.080  |
@@ -141,3 +151,7 @@ structure). Examples:
 The script computes the literal eq. 14 too (`t_fj1_literal_eq14` in the JSON) to
 document the gap. This looks like an equation-typesetting issue in eq. 14 rather
 than a problem with the table numbers — worth reconciling before publication.
+
+See **`eq23_vs_eq14_comparison.md`** (+ figure `eq23_vs_eq14.png`, script
+`generate_eq23_vs_eq14_plot.py`) for the full 12-cell table, the algebraic
+`c2=0` equivalence, and the accuracy analysis.
