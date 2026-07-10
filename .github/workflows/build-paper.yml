@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Compile LaTeX
         uses: xu-cheng/latex-action@v3
@@ -18,7 +18,7 @@ jobs:
           working_directory: docs/paper
 
       - name: Upload PDF
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: main-pdf
           path: docs/paper/main.pdf
