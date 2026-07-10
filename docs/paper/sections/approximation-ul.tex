@@ -30,10 +30,12 @@ utilization $\bar{\rho} = (\rho_1+\rho_2)/2$, giving:
 
 \begin{equation}
   \label{eq:tul}
-  \boxed{\Tul = \left(1 - \frac{\rho_1+\rho_2}{8}\right)\Tub
-                + \frac{\rho_1+\rho_2}{8}\,\Tbot,}
+  \boxed{\Tul = \Tub - \frac{\rho_1+\rho_2}{8}\,(\Tub - \Tbot),}
 \end{equation}
 where $\Tub$ and $\Tbot$ are given by~\eqref{eq:tub} and~\eqref{eq:tbot}.
+The approximation lowers the upper bound by a fraction
+$\alpha = (\rho_1+\rho_2)/8$ of the bound gap $\Tub - \Tbot$: it sits at $\Tub$
+under light load and moves toward $\Tbot$ as utilization rises.
 
 \subsection{Verification: Homogeneous Case}
 
@@ -44,8 +46,8 @@ $\Tbot = T_1$,
 $\alpha = \rho/4$.
 Substituting:
 \begin{equation}
-  \Tul = \left(1 - \frac{\rho}{4}\right)\frac{3}{2}T_1 + \frac{\rho}{4}T_1
-       = \frac{3}{2}T_1 - \frac{3\rho}{8}T_1 + \frac{\rho}{4}T_1
+  \Tul = \frac{3}{2}T_1 - \frac{\rho}{4}\left(\frac{3}{2}T_1 - T_1\right)
+       = \frac{3}{2}T_1 - \frac{\rho}{8}T_1
        = \frac{12-\rho}{8}T_1 = T_2^{\mathrm{hom}}. \quad \checkmark
 \end{equation}
 

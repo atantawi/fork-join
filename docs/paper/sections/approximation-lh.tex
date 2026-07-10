@@ -85,13 +85,16 @@ consistent with a default of $\beta = 10$.
 
 \subsection{The Formula}
 
-Substituting $a_0$, $a_1 = h(r) - a_0$, and $\rho = \lambda/\mumin$:
+Substituting $a_0$ and $a_1 = h(r) - a_0$ into the first-order template and
+collecting terms (with $\rho = \lambda/\mumin$), the response time separates
+into its light-traffic value plus a single load-dependent term:
 \begin{equation}
   \label{eq:tlh}
-  \boxed{\Tlh = \frac{\mumin T_0 + \bigl(h(r) - \mumin T_0\bigr)\rho}
-                     {\mumin - \lambda},}
+  \boxed{\Tlh = T_0 + \frac{\lambda}{\mumin - \lambda}\cdot\frac{h(r)}{\mumin},}
 \end{equation}
 where $T_0$ is given by~\eqref{eq:T0} and $h(r)$ by~\eqref{eq:h}.
+The first term is the exact light-traffic limit; the second carries the
+heavy-traffic singularity at $\lambda \to \mumin$, scaled by $h(r)$.
 
 \subsection{Verification: Homogeneous Case}
 
@@ -132,21 +135,21 @@ Tunable parameter & $\beta$ (default 10) \\
 \label{sec:approx-lhe}
 
 The current $\Tlh$ uses a linear numerator matched to two conditions:
-the zeroth light-traffic derivative $f^{(0)}(0) = T_0$ and the
-heavy-traffic constant $h$.
-The Reiman--Simon framework accommodates a \emph{quadratic} numerator
-by adding the first light-traffic derivative $f^{(1)}(0)$ as a third
-matching condition~\citep{Squillante2026}.
-We denote this enhanced approximation $\Tlhe$.
+the light-traffic value $T_0 = f^{(0)}(0)$ and the heavy-traffic constant $h$.
+The Reiman--Simon framework accommodates a \emph{quadratic} numerator by
+adding the first light-traffic derivative as a third matching
+condition~\citep{Squillante2026}, which we denote
+$T_0' \equiv f^{(1)}(0) = \frac{dT}{d\lambda}\big|_{\lambda=0}$.
+We call the resulting enhanced approximation $\Tlhe$.
 
 \subsection{First Light-Traffic Derivative}
 \label{sec:f1}
 
 Following~\citep{Squillante2026}, the first derivative of the mean response
-time with respect to $\lambda$ at $\lambda = 0$ is given by:
+time with respect to $\lambda$ at $\lambda = 0$ is:
 \begin{equation}
   \label{eq:f1}
-  f^{(1)}(0) = \frac{1}{\mumin^2} + \frac{1}{\mumax^2}
+  T_0' = f^{(1)}(0) = \frac{1}{\mumin^2} + \frac{1}{\mumax^2}
              - \frac{2}{(\mumin+\mumax)^2}
              - \frac{2\,\mumin\,\mumax}{(\mumin+\mumax)^4}.
 \end{equation}
@@ -158,42 +161,49 @@ over $t$.
 \subsection{The Enhanced Formula}
 \label{sec:tlhe}
 
-With three matching conditions---$f^{(0)}(0)$, $f^{(1)}(0)$, and $h$---the
+With three matching conditions---$T_0 = f^{(0)}(0)$, $T_0'$, and $h$---the
 interpolating polynomial $\tilde{g}(\rho) = c_2\rho^2 + c_1\rho + c_0$
 for $g(\rho) = \mumin(1-\rho)T(\rho)$ has coefficients:
 \begin{align}
   c_0 &= \mumin \cdot T_0, \label{eq:c0} \\
-  c_1 &= \mumin^2 \cdot f^{(1)}(0) - \mumin \cdot T_0, \label{eq:c1} \\
+  c_1 &= \mumin^2 \cdot T_0' - \mumin \cdot T_0, \label{eq:c1} \\
   c_2 &= h - c_1 - c_0. \label{eq:c2}
 \end{align}
 Here $c_0$ is identical to $a_0$ in~\eqref{eq:a0}; $c_1$ is determined by
 the first derivative rather than by $h$ alone; and $c_2$ absorbs the
 remaining difference to satisfy the heavy-traffic condition.
-Inverting the scaling gives the enhanced approximation:
+Inverting the scaling gives the quadratic-numerator form
+\begin{equation*}
+  \Tlhe = \frac{c_2\,\rho^2 + c_1\,\rho + c_0}{\mumin(1-\rho)},
+  \qquad \rho = \lambda/\mumin.
+\end{equation*}
+Substituting the coefficients~\eqref{eq:c0}--\eqref{eq:c2} and comparing
+with~\eqref{eq:tlh}, the difference $\Tlhe - \Tlh$ is non-singular---the
+$(1-\rho)$ denominators cancel---leaving a single bounded correction to
+$\Tlh$:
 \begin{equation}
   \label{eq:tlhe}
-  \boxed{\Tlhe = \frac{c_2\,\rho^2 + c_1\,\rho + c_0}{\mumin(1-\rho)},}
+  \boxed{\Tlhe = \Tlh + \lambda\left(T_0' - \frac{h(r)}{\mumin^2}\right),}
 \end{equation}
-where $\rho = \lambda/\mumin$, $T_0$ is given by~\eqref{eq:T0},
-$f^{(1)}(0)$ by~\eqref{eq:f1}, and $h(r)$ by~\eqref{eq:h}.
+where $\Tlh$ is given by~\eqref{eq:tlh}, $T_0'$ by~\eqref{eq:f1}, and $h(r)$
+by~\eqref{eq:h}.
+The correction is linear in $\lambda$ and shifts $\Tlh$ by a finite amount at
+every load, vanishing exactly when $T_0' = h(r)/\mumin^2$.
 
 \subsection{Verification: Homogeneous Case}
 
-When $\mu_1 = \mu_2 = \mu$ (so $\mumin = \mumax = \mu$):
+When $\mu_1 = \mu_2 = \mu$ (so $\mumin = \mumax = \mu$), the first derivative is
 \begin{equation}
-  f^{(1)}(0) = \frac{2}{\mu^2} - \frac{2}{4\mu^2} - \frac{2\mu^2}{16\mu^4}
-             = \frac{11}{8\mu^2}.
+  T_0' = \frac{2}{\mu^2} - \frac{2}{4\mu^2} - \frac{2\mu^2}{16\mu^4}
+       = \frac{11}{8\mu^2}.
 \end{equation}
-Substituting into~\eqref{eq:c0}--\eqref{eq:c2} with $T_0 = 3/(2\mu)$ and
-$h(1) = 11/8$:
+With $h(1) = 11/8$, the correction bracket in~\eqref{eq:tlhe} is
 \begin{equation}
-  c_0 = \frac{3}{2}, \qquad
-  c_1 = \mu^2 \cdot \frac{11}{8\mu^2} - \mu \cdot \frac{3}{2\mu} = -\frac{1}{8}, \qquad
-  c_2 = \frac{11}{8} - \left(-\frac{1}{8}\right) - \frac{3}{2} = 0.
+  T_0' - \frac{h(1)}{\mu^2} = \frac{11}{8\mu^2} - \frac{11}{8\mu^2} = 0.
 \end{equation}
-With $c_2 = 0$ the quadratic term vanishes and $\Tlhe$ reduces to $\Tlh$,
-which recovers the Nelson--Tantawi formula~\eqref{eq:nelson-tantawi}
-for all $\rho$.
+The correction vanishes identically, so $\Tlhe = \Tlh$, which recovers the
+Nelson--Tantawi formula~\eqref{eq:nelson-tantawi} for all $\rho$
+(equivalently, $c_2 = h - c_1 - c_0 = 0$).
 The enhancement is automatically inactive in the homogeneous case,
 regardless of $\beta$.
 
