@@ -294,6 +294,8 @@ python docs/paper/compact_table/generate_compact_table.py   # docs/paper/compact
 python examples/validate_multiseed.py                       # examples/validate_multiseed_cache.json (validation tables)
 ```
 
+**Building the PDF without a local LaTeX install.** The `Build paper PDF` GitHub Actions workflow (`.github/workflows/build-paper.yml`) compiles `docs/paper/main.tex` in a TeXLive container. It runs automatically on pushes touching `docs/paper/**`, or on demand via **Actions → Build paper PDF → Run workflow**. Download the compiled `main.pdf` from the run's `main-pdf` artifact.
+
 ---
 
 ## 10. Summary
