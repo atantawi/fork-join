@@ -90,11 +90,13 @@ $$\alpha = \frac{\rho_1 + \rho_2}{8}$$
 **Verification in the homogeneous case** ($\mu_1 = \mu_2 = \mu$, $\rho = \lambda/\mu$):
 
 - $T_{\text{UB}} = \frac{3}{2} T_1$, $\quad T_{\text{bot}} = T_1$, $\quad \alpha = \rho/4$
-- $T_{\text{UL}} = \left(1 - \frac{\rho}{4}\right) \frac{3}{2} T_1 + \frac{\rho}{4} T_1 = \frac{3/2 - 3\rho/8 + \rho/4}{1} T_1 = \frac{12 - \rho}{8} T_1$ ✓
+- $T_{\text{UL}} = \frac{3}{2} T_1 - \frac{\rho}{4}\left(\frac{3}{2} T_1 - T_1\right) = \frac{3}{2} T_1 - \frac{\rho}{8} T_1 = \frac{12 - \rho}{8} T_1$ ✓
 
 ### 4.3 The Formula
 
-$$\boxed{T_{\text{UL}} = \left(1 - \frac{\rho_1+\rho_2}{8}\right) T_{\text{UB}} + \frac{\rho_1+\rho_2}{8}\, T_{\text{bot}}}$$
+$$\boxed{T_{\text{UL}} = T_{\text{UB}} - \frac{\rho_1+\rho_2}{8}\,(T_{\text{UB}} - T_{\text{bot}})}$$
+
+This lowers the upper bound by a fraction $\alpha = (\rho_1+\rho_2)/8$ of the bound gap $T_{\text{UB}} - T_{\text{bot}}$.
 
 ### 4.4 Properties
 
@@ -159,11 +161,11 @@ This gives:
 
 ### 5.5 The Formula
 
-Substituting $a_0$ and $a_1 = h(r) - a_0$ into the Reiman-Simon form:
+Substituting $a_0$ and $a_1 = h(r) - a_0$ into the Reiman-Simon form and collecting terms, the response time separates into its light-traffic value plus a single load-dependent term:
 
-$$\boxed{T_{\text{LH}} = \frac{\mu_{\min} T_0 + \bigl(h(r) - \mu_{\min} T_0\bigr)\,\rho}{\mu_{\min} - \lambda}}$$
+$$\boxed{T_{\text{LH}} = T_0 + \frac{\lambda}{\mu_{\min} - \lambda}\cdot\frac{h(r)}{\mu_{\min}}}$$
 
-where $T_0 = 1/\mu_1 + 1/\mu_2 - 1/(\mu_1+\mu_2)$, $\rho = \lambda/\mu_{\min}$, $r = \mu_{\max}/\mu_{\min}$, and $h(r) = 1 + \tfrac{3}{8}\,r^{-\beta}$.
+where $T_0 = 1/\mu_1 + 1/\mu_2 - 1/(\mu_1+\mu_2)$, $\rho = \lambda/\mu_{\min}$, $r = \mu_{\max}/\mu_{\min}$, and $h(r) = 1 + \tfrac{3}{8}\,r^{-\beta}$. The first term is the exact light-traffic limit; the second carries the heavy-traffic singularity at $\lambda \to \mu_{\min}$.
 
 **Verification — homogeneous case** ($\mu_1 = \mu_2 = \mu$, $r = 1$):
 
@@ -188,13 +190,15 @@ This recovery holds for **all** $\rho$, regardless of $\beta$.
 
 ## 6. Method 3: Enhanced Light-Heavy Traffic Interpolation ($T_{\text{LH}}^{\text{enh}}$)
 
-Extends $T_{\text{LH}}$ by adding the first light-traffic derivative $f^{(1)}(0)$ as a third matching condition, yielding a quadratic numerator. See [`docs/enhanced-lh-approximation.md`](docs/enhanced-lh-approximation.md) for the full derivation.
+Extends $T_{\text{LH}}$ by adding the first light-traffic derivative $T_0' \equiv f^{(1)}(0) = \tfrac{dT}{d\lambda}\big|_{\lambda=0}$ as a third matching condition, yielding a quadratic numerator. See [`docs/enhanced-lh-approximation.md`](docs/enhanced-lh-approximation.md) for the full derivation.
 
-$$f^{(1)}(0) = \frac{1}{\mu_{\min}^2} + \frac{1}{\mu_{\max}^2} - \frac{2}{(\mu_{\min}+\mu_{\max})^2} - \frac{2\mu_{\min}\mu_{\max}}{(\mu_{\min}+\mu_{\max})^4}$$
+$$T_0' = f^{(1)}(0) = \frac{1}{\mu_{\min}^2} + \frac{1}{\mu_{\max}^2} - \frac{2}{(\mu_{\min}+\mu_{\max})^2} - \frac{2\mu_{\min}\mu_{\max}}{(\mu_{\min}+\mu_{\max})^4}$$
 
-$$\boxed{T_{\text{LH}}^{\text{enh}} = \frac{c_2\,\rho^2 + c_1\,\rho + c_0}{\mu_{\min}(1-\rho)}}$$
+Substituting the coefficients collapses the quadratic to a single bounded correction to $T_{\text{LH}}$:
 
-where $c_0 = \mu_{\min}T_0$, $c_1 = \mu_{\min}^2 f^{(1)}(0) - \mu_{\min}T_0$, $c_2 = h - c_1 - c_0$. At $r=1$, $c_2 = 0$ and this reduces exactly to $T_{\text{LH}}$.
+$$\boxed{T_{\text{LH}}^{\text{enh}} = T_{\text{LH}} + \lambda\left(T_0' - \frac{h(r)}{\mu_{\min}^2}\right)}$$
+
+Equivalently, in the quadratic $c$-form $T_{\text{LH}}^{\text{enh}} = (c_2\,\rho^2 + c_1\,\rho + c_0)/(\mu_{\min}(1-\rho))$ with $c_0 = \mu_{\min}T_0$, $c_1 = \mu_{\min}^2 T_0' - \mu_{\min}T_0$, $c_2 = h - c_1 - c_0$. The correction vanishes when $T_0' = h(r)/\mu_{\min}^2$ (e.g. at $r=1$, where $c_2 = 0$), recovering $T_{\text{LH}}$ exactly.
 
 ---
 
@@ -298,7 +302,7 @@ Three closed-form approximations for the heterogeneous 2-queue fork-join mean re
 
 1. **$T_{\text{UL}}$** — convex combination of bounds; always within bounds; errors $\leq 1.2\%$. Recommended default.
 2. **$T_{\text{LH}}$** — zero-order Reiman-Simon; matches $f^{(0)}(0)$ and $h$; errors $\leq 2.0\%$.
-3. **$T_{\text{LH}}^{\text{enh}}$** — first-order Reiman-Simon; additionally matches $f^{(1)}(0)$; strictly better than $T_{\text{LH}}$ for $r \geq 2$; identical at $r=1$; slightly worse at $r=1.5$. See [`docs/enhanced-lh-approximation.md`](docs/enhanced-lh-approximation.md).
+3. **$T_{\text{LH}}^{\text{enh}}$** — first-order Reiman-Simon; additionally matches $T_0' = f^{(1)}(0)$; strictly better than $T_{\text{LH}}$ for $r \geq 2$; identical at $r=1$; slightly worse at $r=1.5$. See [`docs/enhanced-lh-approximation.md`](docs/enhanced-lh-approximation.md).
 
 ---
 

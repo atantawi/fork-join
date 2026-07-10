@@ -26,10 +26,10 @@ below $1.9\%$.
 
 The third, the \emph{enhanced light-heavy traffic interpolation}:
 \begin{equation}
-  \Tlhe = \frac{c_2\,\rho^2 + c_1\,\rho + c_0}{\mumin(1-\rho)},
+  \Tlhe = \Tlh + \lambda\left(T_0' - \frac{h(r)}{\mumin^2}\right),
 \end{equation}
-extends $\Tlh$ to a quadratic numerator by additionally matching the first
-light-traffic derivative $f^{(1)}(0)$.
+adds to $\Tlh$ a bounded correction set by the first light-traffic
+derivative $T_0'$.
 It is strictly more accurate than $\Tlh$ for $r \geq 2$ (errors up to
 $81\%$ smaller at high heterogeneity) while being identical to $\Tlh$ at
 $r = 1$.
