@@ -1,0 +1,145 @@
+Protocol: 5 seeds [0, 1, 2, 3, 4] x 20,000,000 jobs (fixed length), url=http://localhost:8080
+
+Homogeneous r=1 cells (exact-closed-form gate):
+    seed 0 ... 2.4167 in 107s
+    seed 1 ... 2.4161 in 107s
+    seed 2 ... 2.4152 in 107s
+    seed 3 ... 2.4192 in 107s
+    seed 4 ... 2.4181 in 106s
+    seed 0 ... 7.0103 in 106s
+    seed 1 ... 6.9948 in 113s
+    seed 2 ... 7.0010 in 106s
+    seed 3 ... 7.0289 in 105s
+    seed 4 ... 7.0062 in 105s
+    seed 0 ... 13.9980 in 106s
+    seed 1 ... 13.9526 in 107s
+    seed 2 ... 13.7993 in 107s
+    seed 3 ... 13.8358 in 107s
+    seed 4 ... 13.8888 in 107s
+    seed 0 ... 28.0122 in 108s
+    seed 1 ... 27.9373 in 108s
+    seed 2 ... 27.6400 in 108s
+    seed 3 ... 27.7849 in 109s
+    seed 4 ... 27.6970 in 108s
+
+Heterogeneous cells:
+  rho=0.4 r=2
+    seed 0 ... 1.8147 in 105s
+    seed 1 ... 1.8157 in 105s
+    seed 2 ... 1.8139 in 105s
+    seed 3 ... 1.8141 in 105s
+    seed 4 ... 1.8173 in 105s
+  rho=0.4 r=4
+    seed 0 ... 1.7039 in 105s
+    seed 1 ... 1.7039 in 104s
+    seed 2 ... 1.7019 in 105s
+    seed 3 ... 1.7032 in 106s
+    seed 4 ... 1.7045 in 105s
+  rho=0.4 r=8
+    seed 0 ... 1.6764 in 105s
+    seed 1 ... 1.6792 in 105s
+    seed 2 ... 1.6760 in 105s
+    seed 3 ... 1.6763 in 106s
+    seed 4 ... 1.6771 in 105s
+  rho=0.8 r=2
+    seed 0 ... 5.0667 in 106s
+    seed 1 ... 5.0939 in 106s
+    seed 2 ... 5.0676 in 106s
+    seed 3 ... 5.0886 in 106s
+    seed 4 ... 5.0778 in 106s
+  rho=0.8 r=4
+    seed 0 ... 5.0201 in 106s
+    seed 1 ... 5.0356 in 105s
+    seed 2 ... 5.0164 in 106s
+    seed 3 ... 5.0160 in 106s
+    seed 4 ... 5.0216 in 105s
+  rho=0.8 r=8
+    seed 0 ... 5.0194 in 105s
+    seed 1 ... 4.9997 in 106s
+    seed 2 ... 4.9828 in 106s
+    seed 3 ... 5.0190 in 106s
+    seed 4 ... 5.0230 in 106s
+  rho=0.9 r=2
+    seed 0 ... 10.0180 in 106s
+    seed 1 ... 10.1182 in 107s
+    seed 2 ... 9.9670 in 107s
+    seed 3 ... 9.9995 in 109s
+    seed 4 ... 10.1427 in 107s
+  rho=0.9 r=4
+    seed 0 ... 9.9979 in 107s
+    seed 1 ... 10.0603 in 108s
+    seed 2 ... 10.0221 in 107s
+    seed 3 ... 10.1084 in 107s
+    seed 4 ... 10.0347 in 106s
+  rho=0.9 r=8
+    seed 0 ... 9.9121 in 106s
+    seed 1 ... 10.0167 in 107s
+    seed 2 ... 9.9896 in 107s
+    seed 3 ... 9.9643 in 107s
+    seed 4 ... 9.9902 in 107s
+  rho=0.95 r=2
+    seed 0 ... 20.3519 in 110s
+    seed 1 ... 20.0369 in 109s
+    seed 2 ... 19.7428 in 110s
+    seed 3 ... 20.3628 in 109s
+    seed 4 ... 20.0109 in 109s
+  rho=0.95 r=4
+    seed 0 ... 19.8878 in 110s
+    seed 1 ... 19.7400 in 109s
+    seed 2 ... 20.1640 in 109s
+    seed 3 ... 19.9572 in 109s
+    seed 4 ... 20.2801 in 109s
+  rho=0.95 r=8
+    seed 0 ... 19.8307 in 109s
+    seed 1 ... 19.9496 in 109s
+    seed 2 ... 20.2376 in 109s
+    seed 3 ... 20.1958 in 108s
+    seed 4 ... 19.8173 in 109s
+
+====================================================================================================
+qsim-service vs. table1_repro simulator  (fixed-length runs, cross-seed 95% t-CI both arms)
+====================================================================================================
+health: ok
+determinism: ok: seed 99 reproducible at 4.938793 (200,000 jobs)
+r=1 closed-form gate (Nelson & Tantawi):
+  rho=0.4   exact=   2.4167 qsim=   2.4170 +/-0.0020  gap=+0.0004 (0.01 tolerance units)  ok
+  rho=0.8   exact=   7.0000 qsim=   7.0083 +/-0.0160  gap=+0.0083 (0.10 tolerance units)  ok
+  rho=0.9   exact=  13.8750 qsim=  13.8949 +/-0.1013  gap=+0.0199 (0.08 tolerance units)  ok
+  rho=0.95  exact=  27.6250 qsim=  27.8143 +/-0.1956  gap=+0.1893 (0.40 tolerance units)  ok
+----------------------------------------------------------------------------------------------------
+  rho  r |  T_simple    +-CI |    T_qsim    +-CI |       gap  gap/hw  agree |    jobs/s
+----------------------------------------------------------------------------------------------------
+  0.4  1 |    2.4168  0.0010 |    2.4170  0.0020 |   +0.0002    0.08    yes |   187,038
+  0.8  1 |    7.0008  0.0180 |    7.0083  0.0160 |   +0.0075    0.22    yes |   186,685
+  0.9  1 |   13.8917  0.0822 |   13.8949  0.1013 |   +0.0032    0.02    yes |   187,443
+ 0.95  1 |   27.7548  0.3369 |   27.8143  0.1956 |   +0.0595    0.11    yes |   184,909
+  0.4  2 |    1.8144  0.0011 |    1.8151  0.0017 |   +0.0008    0.27    yes |   190,314
+  0.4  4 |    1.7021  0.0011 |    1.7035  0.0012 |   +0.0013    0.56    yes |   190,641
+  0.4  8 |    1.6757  0.0012 |    1.6770  0.0016 |   +0.0013    0.47    yes |   189,993
+  0.8  2 |    5.0811  0.0185 |    5.0789  0.0152 |   -0.0021    0.06    yes |   188,852
+  0.8  4 |    5.0145  0.0187 |    5.0219  0.0099 |   +0.0075    0.26    yes |   189,109
+  0.8  8 |    5.0036  0.0188 |    5.0088  0.0213 |   +0.0052    0.13    yes |   188,977
+  0.9  2 |   10.0505  0.0834 |   10.0491  0.0956 |   -0.0014    0.01    yes |   186,735
+  0.9  4 |   10.0113  0.0836 |   10.0447  0.0523 |   +0.0334    0.25    yes |   186,879
+  0.9  8 |   10.0055  0.0836 |    9.9746  0.0491 |   -0.0310    0.23    yes |   187,715
+ 0.95  2 |   20.0959  0.2955 |   20.1011  0.3238 |   +0.0051    0.01    yes |   182,477
+ 0.95  4 |   20.0746  0.2956 |   20.0058  0.2687 |   -0.0687    0.12    yes |   183,552
+ 0.95  8 |   20.0716  0.2957 |   20.0062  0.2477 |   -0.0654    0.12    yes |   183,980
+====================================================================================================
+
+ALL CELLS AGREE: every qsim mean is within the combined 95% CI of the simple simulator's.
+
+The two CIs compared above are built identically (cross-seed t over per-seed means).
+qsim's own PER-RUN interval is a different object entirely:
+                        simple simulator             qsim per-run CI
+  Unit of observation   5 whole-run means            batch means within ONE run
+  Method                Student-t on 5 values        spectral: batch means + polyfit to log-spectrum
+  Autocorrelation       independent replications     spectral variance-of-the-mean estimate
+  Warm-up               500 K jobs, caller-specified none observed (samplesDiscarded = 0)
+  Count                 1 per cell                   1 per seed
+
+Results written to /Users/tantawi/Projects/fork-join/experiments/table1_qsim/table1_qsim_results.json
+LaTeX written to /Users/tantawi/Projects/fork-join/experiments/table1_qsim/table1_qsim_comparison.tex
+Figure written to /Users/tantawi/Projects/fork-join/experiments/table1_qsim/table1_qsim_agreement.{png,pdf}
+GRID_EXIT=0
+ALL_DONE

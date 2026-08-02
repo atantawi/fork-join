@@ -1,0 +1,68 @@
+{
+  "classes": [
+    {
+      "name": "jobs",
+      "type": "open"
+    }
+  ],
+  "name": "fj-rho0.80-r4",
+  "nodes": [
+    {
+      "arrivals": {
+        "jobs": {
+          "distribution": {
+            "rate": 0.8,
+            "type": "exponential"
+          }
+        }
+      },
+      "name": "src",
+      "type": "source"
+    },
+    {
+      "branches": [
+        {
+          "service": {
+            "jobs": {
+              "distribution": {
+                "rate": 1.0,
+                "type": "exponential"
+              }
+            }
+          }
+        },
+        {
+          "service": {
+            "jobs": {
+              "distribution": {
+                "rate": 4.0,
+                "type": "exponential"
+              }
+            }
+          }
+        }
+      ],
+      "join": "all",
+      "name": "fj",
+      "type": "fork-join"
+    },
+    {
+      "name": "snk",
+      "type": "sink"
+    }
+  ],
+  "routing": {
+    "jobs": [
+      {
+        "from": "src",
+        "probability": 1.0,
+        "to": "fj"
+      },
+      {
+        "from": "fj",
+        "probability": 1.0,
+        "to": "snk"
+      }
+    ]
+  }
+}
