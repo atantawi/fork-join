@@ -1,0 +1,22 @@
+[
+  {
+    "rho": 0.8,
+    "r": 4.0,
+    "podman": 107.665808506,
+    "podman_mean": 5.02010121196673,
+    "local": 103.986616709,
+    "local_mean": 5.02010121196673,
+    "overhead_pct": 3.5381397274381943,
+    "means_identical": true
+  },
+  {
+    "rho": 0.95,
+    "r": 8.0,
+    "podman": 110.770759686,
+    "podman_mean": 19.830689478889763,
+    "local": 109.793759,
+    "local_mean": 19.830689478889763,
+    "overhead_pct": 0.8898508393359705,
+    "means_identical": true
+  }
+]

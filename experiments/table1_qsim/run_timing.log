@@ -1,0 +1,121 @@
+Protocol: 5 seeds [0, 1, 2, 3, 4] x 20,000,000 jobs (fixed length), url=http://localhost:8080
+
+Homogeneous r=1 cells (exact-closed-form gate):
+
+Heterogeneous cells:
+  rho=0.4 r=2
+  rho=0.4 r=4
+  rho=0.4 r=8
+  rho=0.8 r=2
+  rho=0.8 r=4
+  rho=0.8 r=8
+  rho=0.9 r=2
+  rho=0.9 r=4
+  rho=0.9 r=8
+  rho=0.95 r=2
+  rho=0.95 r=4
+  rho=0.95 r=8
+
+====================================================================================================
+qsim-service vs. table1_repro simulator  (fixed-length runs, cross-seed 95% t-CI both arms)
+====================================================================================================
+health: ok
+determinism: ok: seed 99 reproducible at 4.938793 (200,000 jobs)
+r=1 closed-form gate (Nelson & Tantawi):
+  rho=0.4   exact=   2.4167 qsim=   2.4170 +/-0.0020  gap=+0.0004 (0.01 tolerance units)  ok
+  rho=0.8   exact=   7.0000 qsim=   7.0083 +/-0.0160  gap=+0.0083 (0.10 tolerance units)  ok
+  rho=0.9   exact=  13.8750 qsim=  13.8949 +/-0.1013  gap=+0.0199 (0.08 tolerance units)  ok
+  rho=0.95  exact=  27.6250 qsim=  27.8143 +/-0.1956  gap=+0.1893 (0.40 tolerance units)  ok
+----------------------------------------------------------------------------------------------------
+  rho  r |  T_simple    +-CI |    T_qsim    +-CI |       gap  gap/hw  agree |    jobs/s
+----------------------------------------------------------------------------------------------------
+  0.4  1 |    2.4168  0.0010 |    2.4170  0.0020 |   +0.0002    0.08    yes |   187,038
+  0.8  1 |    7.0008  0.0180 |    7.0083  0.0160 |   +0.0075    0.22    yes |   186,685
+  0.9  1 |   13.8917  0.0822 |   13.8949  0.1013 |   +0.0032    0.02    yes |   187,443
+ 0.95  1 |   27.7548  0.3369 |   27.8143  0.1956 |   +0.0595    0.11    yes |   184,909
+  0.4  2 |    1.8144  0.0011 |    1.8151  0.0017 |   +0.0008    0.27    yes |   190,314
+  0.4  4 |    1.7021  0.0011 |    1.7035  0.0012 |   +0.0013    0.56    yes |   190,641
+  0.4  8 |    1.6757  0.0012 |    1.6770  0.0016 |   +0.0013    0.47    yes |   189,993
+  0.8  2 |    5.0811  0.0185 |    5.0789  0.0152 |   -0.0021    0.06    yes |   188,852
+  0.8  4 |    5.0145  0.0187 |    5.0219  0.0099 |   +0.0075    0.26    yes |   189,109
+  0.8  8 |    5.0036  0.0188 |    5.0088  0.0213 |   +0.0052    0.13    yes |   188,977
+  0.9  2 |   10.0505  0.0834 |   10.0491  0.0956 |   -0.0014    0.01    yes |   186,735
+  0.9  4 |   10.0113  0.0836 |   10.0447  0.0523 |   +0.0334    0.25    yes |   186,879
+  0.9  8 |   10.0055  0.0836 |    9.9746  0.0491 |   -0.0310    0.23    yes |   187,715
+ 0.95  2 |   20.0959  0.2955 |   20.1011  0.3238 |   +0.0051    0.01    yes |   182,477
+ 0.95  4 |   20.0746  0.2956 |   20.0058  0.2687 |   -0.0687    0.12    yes |   183,552
+ 0.95  8 |   20.0716  0.2957 |   20.0062  0.2477 |   -0.0654    0.12    yes |   183,980
+====================================================================================================
+
+ALL CELLS AGREE: every qsim mean is within the combined 95% CI of the simple simulator's.
+
+The two CIs compared above are built identically (cross-seed t over per-seed means).
+qsim's own PER-RUN interval is a different object entirely:
+                        simple simulator             qsim per-run CI
+  Unit of observation   5 whole-run means            batch means within ONE run
+  Method                Student-t on 5 values        spectral: batch means + polyfit to log-spectrum
+  Autocorrelation       independent replications     spectral variance-of-the-mean estimate
+  Warm-up               500 K jobs, caller-specified none observed (samplesDiscarded = 0)
+  Count                 1 per cell                   1 per seed
+
+TIMING (interleaved per cell, never concurrent; qsim 20,000,000 jobs/seed vs simple 20,500,000)
+    rho  r |  simple s    qsim s   ratio | simple jobs/s  qsim jobs/s | hw_simple   hw_qsim
+    0.4  1 |      64.9     534.6     8.2x |     1,579,310      187,038 |    0.0010    0.0020
+    0.8  1 |      63.9     535.7     8.4x |     1,604,089      186,685 |    0.0180    0.0160
+    0.9  1 |      63.5     533.5     8.4x |     1,613,242      187,443 |    0.0822    0.1013
+   0.95  1 |      63.2     540.8     8.6x |     1,622,480      184,909 |    0.3369    0.1956
+    0.4  2 |      64.1     525.4     8.2x |     1,598,495      190,314 |    0.0011    0.0017
+    0.4  4 |      63.6     524.5     8.2x |     1,612,008      190,641 |    0.0011    0.0012
+    0.4  8 |      63.3     526.3     8.3x |     1,619,511      189,993 |    0.0012    0.0016
+    0.8  2 |      63.6     529.5     8.3x |     1,611,764      188,852 |    0.0185    0.0152
+    0.8  4 |      63.7     528.8     8.3x |     1,609,500      189,109 |    0.0187    0.0099
+    0.8  8 |      64.1     529.2     8.3x |     1,598,306      188,977 |    0.0188    0.0213
+    0.9  2 |      63.3     535.5     8.5x |     1,619,593      186,735 |    0.0834    0.0956
+    0.9  4 |      63.6     535.1     8.4x |     1,611,854      186,879 |    0.0836    0.0523
+    0.9  8 |      63.5     532.7     8.4x |     1,613,745      187,715 |    0.0836    0.0491
+   0.95  2 |      63.4     548.0     8.6x |     1,617,522      182,477 |    0.2955    0.3238
+   0.95  4 |      64.0     544.8     8.5x |     1,600,521      183,552 |    0.2956    0.2687
+   0.95  8 |      63.8     543.5     8.5x |     1,606,879      183,980 |    0.2957    0.2477
+  NOT identical work: the simple simulator additionally runs 500,000 warm-up jobs per seed (20,500,000 total vs qsim's 20,000,000), so read the jobs/s columns -- which are work-normalised -- rather than the raw ratio.
+  Caveats: qsim's seconds are engine-side inside a podman VM (see the 2-cell local-JVM probe in the README), and neither simulator removes the same transient (spec 6.5).
+
+TRANSIENT-BIAS CHECK (20,000,000 vs 40,000,000 jobs, seed 0)
+    rho  r |      T(N)     T(2N)      diff   diff %  within CI
+    seed 0 ... 2.4157 in 210s
+    0.4  1 |    2.4167    2.4157   -0.0009   -0.04%        yes
+    seed 0 ... 6.9861 in 211s
+    0.8  1 |    7.0103    6.9861   -0.0242   -0.34%        yes
+    seed 0 ... 13.8818 in 213s
+    0.9  1 |   13.9980   13.8818   -0.1162   -0.83%        yes
+    seed 0 ... 27.8973 in 218s
+   0.95  1 |   28.0122   27.8973   -0.1149   -0.41%        yes
+    seed 0 ... 1.8138 in 211s
+    0.4  2 |    1.8147    1.8138   -0.0009   -0.05%        yes
+    seed 0 ... 1.7018 in 212s
+    0.4  4 |    1.7039    1.7018   -0.0021   -0.12%        yes
+    seed 0 ... 1.6752 in 211s
+    0.4  8 |    1.6764    1.6752   -0.0013   -0.08%        yes
+    seed 0 ... 5.0721 in 211s
+    0.8  2 |    5.0667    5.0721   +0.0054   +0.11%        yes
+    seed 0 ... 5.0116 in 213s
+    0.8  4 |    5.0201    5.0116   -0.0085   -0.17%        yes
+    seed 0 ... 5.0205 in 211s
+    0.8  8 |    5.0194    5.0205   +0.0012   +0.02%        yes
+    seed 0 ... 10.0927 in 215s
+    0.9  2 |   10.0180   10.0927   +0.0747   +0.75%        yes
+    seed 0 ... 9.9630 in 215s
+    0.9  4 |    9.9979    9.9630   -0.0349   -0.35%        yes
+    seed 0 ... 9.9424 in 216s
+    0.9  8 |    9.9121    9.9424   +0.0303   +0.31%        yes
+    seed 0 ... 20.2799 in 220s
+   0.95  2 |   20.3519   20.2799   -0.0720   -0.35%        yes
+    seed 0 ... 20.1107 in 217s
+   0.95  4 |   19.8878   20.1107   +0.2229   +1.12%        yes
+    seed 0 ... 20.0209 in 219s
+   0.95  8 |   19.8307   20.0209   +0.1902   +0.96%        yes
+  All cells: the un-removed transient is below the noise floor.
+
+Results written to /Users/tantawi/Projects/fork-join/experiments/table1_qsim/table1_qsim_results.json
+LaTeX written to /Users/tantawi/Projects/fork-join/experiments/table1_qsim/table1_qsim_comparison.tex
+Figure written to /Users/tantawi/Projects/fork-join/experiments/table1_qsim/table1_qsim_agreement.{png,pdf}
+TIMING_EXIT=0
