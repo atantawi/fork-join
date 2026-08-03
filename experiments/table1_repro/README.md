@@ -77,6 +77,46 @@ latexmk -pdf table1_preview.tex        # -> table1_preview.pdf
 published-numbers table instead, edit the `\input{...}` line in
 `table1_preview.tex` to point at `table1_paperexact.tex`.
 
+## The final Table 1 (updates A + B applied)
+
+**`table1.tex` is the final table.** It applies both corrections:
+
+- **A — multi-replica simulation.** `T_sim` is the grand mean over 5 independent
+  replications of 20 M jobs (500 K warm-up each) and the CI is the Student-$t$
+  interval across the 5 replica means, as the paper text describes. The caption
+  now states this explicitly, because the CI no longer means what it did in the
+  published table (a within-run normal approximation).
+- **B — correct `E[T_FJ^(1)]`.** The column is the quadratic enhanced-LH form
+  (`mean_response_time_lh_enhanced`, `docs/paper` eq. 23), which retains the
+  heavy-traffic anchoring term `c_2 rho^2`. This is what the published column
+  already contained, so **the table numbers were right and eq. 14 is what needs
+  fixing**: it must be typeset *with* the `c_2 rho^2` term. A LaTeX comment at
+  the top of `table1.tex` records this.
+
+All 12 cells were verified by recomputing `T_sim`, the CI, the three
+approximations, every error, and the bold placement directly from the per-seed
+cache. `table1_preview.pdf` is the rendered result.
+
+### Two consequences for the paper text
+
+1. **The "< 1.2%" accuracy claim no longer holds.** Under the honest protocol the
+   largest error is **+1.71%** (`E[T_FJ^(0)]` at `rho=0.8, r=2`); `E[T_FJ^(1)]`
+   peaks at +1.37%. In the published single-replica table the max was 1.16%,
+   which is what made "< 1.2%" true. The claim needs to be relaxed (e.g. "< 2%")
+   or restated per-approximation.
+2. **Which approximation "wins" changes.** Bold counts shift from
+   `E[T_FJ]` 3 / `E[T_FJ^(0)]` 6 / `E[T_FJ^(1)]` 3 in the published table to
+   **`E[T_FJ]` 8 / `E[T_FJ^(0)]` 2 / `E[T_FJ^(1)]` 2**. Under the multi-replica
+   reference, the *simplest* interpolation (eq. 6) is most accurate in 8 of 12
+   cells. Any text asserting the enhanced approximations are the most accurate
+   needs revisiting.
+
+   Caveat worth stating in the paper: in **6 of 12 cells** (`rho=0.8, r=8`;
+   all of `rho=0.9, r∈{4,8}`; all of `rho=0.95`) the spread among the three
+   approximations is *smaller than the CI half-width* and all three lie inside
+   the simulation CI — so at high load the bolding ranks differences the
+   simulation cannot resolve.
+
 ## Two findings worth reconciling before publication
 
 ### 1. The published Table 1 does not use the protocol the text describes
@@ -110,6 +150,9 @@ the "< 1.2%" claim (e.g. LH at rho=0.8, r=2: +1.71% vs the published +1.16%),
 though every approximation still lies within the honest simulation CI at
 moderate-to-high load. **Either regenerate Table 1 with the 5-seed t-CI protocol
 the text describes, or change the text to match the single-seed method used.**
+
+> **Resolved:** regenerated with the 5-seed t-CI protocol — this is update A in
+> [The final Table 1](#the-final-table-1-updates-a--b-applied) above.
 
 ### 2. `E[T_FJ^(1)]` column vs. eq. 14 as typeset
 
@@ -151,6 +194,10 @@ moderate-to-heavy load (worst −2.99% at `rho=0.95, r=4`).
 The script computes the literal eq. 14 too (`t_fj1_literal_eq14` in the JSON) to
 document the gap. This looks like an equation-typesetting issue in eq. 14 rather
 than a problem with the table numbers — worth reconciling before publication.
+
+> **Resolved:** the table keeps the quadratic eq. 23 column (update B); the fix
+> belongs in the paper, where eq. 14 must be typeset *with* the `c_2 rho^2` term.
+> This is a `docs/paper`/manuscript edit and is **not yet applied**.
 
 See **`eq23_vs_eq14_comparison.md`** (+ figure `eq23_vs_eq14.png`, script
 `generate_eq23_vs_eq14_plot.py`) for the full 12-cell table, the algebraic
