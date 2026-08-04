@@ -33,33 +33,63 @@ matching the paper's Table 1 cell exactly.
 > 95% confidence interval … is computed via the t-distribution across the
 > different replicas."
 
-So: **20 M jobs, 500 K warmup, 5 independent seeds**; `T_sim` is the grand mean
+So: **20 M jobs, 500 K warmup**, independent seeds; `T_sim` is the grand mean
 over seeds and the 95% CI half-width is `t_{0.975, k-1} · s / sqrt(k)` with `s`
 the sample std (ddof=1) of the per-seed means (independent-replications method).
 This drives the library `forkjoin.simulate()` once per seed — the simulator is
 not reimplemented here.
 
+**The default is now `k=10` replicas, not the 5 the paper text states**, to
+tighten the interval. Two effects compound: the *t* quantile drops
+(`t_{.975,4}=2.776` → `t_{.975,9}=2.262`) and `sqrt(k)` grows, so at fixed
+replica spread the half-width shrinks ~42%; in practice it roughly halved (see
+the CI table below). **The paper text must therefore say ten replicas** — the
+generated caption reports the actual `k`.
+
 ## Running
 
 ```bash
-python reproduce_table1.py           # correct protocol: 20M jobs × 5 seeds, t-CI (~12 min)
+python reproduce_table1.py           # 20M jobs × 10 seeds, t-CI (~25 min cold, ~12 min from the 5-seed cache)
 python reproduce_table1.py --paper-exact   # reproduce PUBLISHED numbers: seed 42, 10M, normal CI (~8 min)
-python reproduce_table1.py --quick   # 200K jobs × 5 seeds (smoke test, seconds)
+python reproduce_table1.py --quick   # 200K jobs × 10 seeds (smoke test, seconds)
+python reproduce_table1.py --seeds 0 1 2 3 4   # the earlier 5-replica table
 ```
 
-Results cache to `table1_results.json` (keyed by rho, r, n_jobs, warmup, seeds),
-so re-runs are instant. Outputs:
+Results cache to `table1_results.json`, **one entry per replication** (keyed by
+rho, r, n_jobs, warmup, *seed*), so raising the replica count re-runs only the
+new seeds and re-runs are otherwise instant. `simulate()` is deterministic in
+the seed, so a cached replica mean is identical to re-running it. (Legacy
+per-seed-*list* cache entries are migrated to per-seed keys automatically on
+load.) Outputs:
 
-- `table1_results.json` — full numbers + per-seed means
-- `table1.tex` — correct-protocol LaTeX table (5-seed t-CI)
+- `table1_results.json` — per-replication cache (mean + normal-CI half-width)
+- `table1.tex` — the table (10-seed t-CI)
 - `table1_paperexact.tex` — exact reproduction of the published numbers
 - `table1_errors.{png,pdf}` — relative-error bar chart
 - `eq23_vs_eq14_comparison.md` — full 12-cell eq. 23 vs eq. 14 write-up (Finding 2)
 - `eq23_vs_eq14.{png,pdf}` — eq. 23 vs eq. 14 comparison figure
   (`generate_eq23_vs_eq14_plot.py`)
 
-An extra homogeneous row (`r=1`) is simulated as a sanity check (recovers
-Nelson–Tantawi to the third decimal) but is not part of the main `{2,4,8}` table.
+The superseded **5-replica** artifacts are kept alongside for comparison:
+`table1_5rep.tex`, `table1_errors_5rep.{png,pdf}`, `table1_preview_5rep.pdf`,
+`eq23_vs_eq14_5rep.{png,pdf}`. (The console logs `run_full.log` /
+`run_full_10rep.log` are local only — `*.log` is gitignored.) Only the
+approximation columns are identical between the two — every `T_sim`, CI, and
+error differs, and the bolding differs in one cell.
+
+An extra homogeneous row (`r=1`) is simulated as a sanity check but is not part
+of the main `{2,4,8}` table. Over 10 replicas it agrees with the exact
+Nelson–Tantawi `T_2 = (12-rho)/(8(mu-lambda))` **within the 95% CI at all four
+loads** — exactly to the third decimal at `rho=0.4` (2.4166 vs 2.4167), but only
+to ~0.3% at `rho=0.95` (27.715 ± 0.188 vs 27.625), since the CI itself is ±0.19
+there:
+
+| rho | `T_sim(r=1)` ± CI | Nelson–Tantawi exact | err |
+|---|---|---|---|
+| 0.4  | 2.4166 ± 0.0006  | 2.4167  | −0.00% |
+| 0.8  | 7.0020 ± 0.0076  | 7.0000  | +0.03% |
+| 0.9  | 13.8881 ± 0.0408 | 13.8750 | +0.09% |
+| 0.95 | 27.7154 ± 0.1875 | 27.6250 | +0.33% |
 
 ## Rendering a table to PDF
 
@@ -81,9 +111,10 @@ published-numbers table instead, edit the `\input{...}` line in
 
 **`table1.tex` is the final table.** It applies both corrections:
 
-- **A — multi-replica simulation.** `T_sim` is the grand mean over 5 independent
+- **A — multi-replica simulation.** `T_sim` is the grand mean over 10 independent
   replications of 20 M jobs (500 K warm-up each) and the CI is the Student-$t$
-  interval across the 5 replica means, as the paper text describes. The caption
+  interval across the 10 replica means (the paper text says five — it needs
+  updating to ten). The caption
   now states this explicitly, because the CI no longer means what it did in the
   published table (a within-run normal approximation).
 - **B — correct `E[T_FJ^(1)]`.** The column is the quadratic enhanced-LH form
@@ -94,28 +125,31 @@ published-numbers table instead, edit the `\input{...}` line in
   the top of `table1.tex` records this.
 
 All 12 cells were verified by recomputing `T_sim`, the CI, the three
-approximations, every error, and the bold placement directly from the per-seed
-cache. `table1_preview.pdf` is the rendered result.
+approximations, every error, and the bold placement directly from the
+per-replication cache. `table1_preview.pdf` is the rendered result.
 
 ### Two consequences for the paper text
 
 1. **The "< 1.2%" accuracy claim no longer holds.** Under the honest protocol the
-   largest error is **+1.71%** (`E[T_FJ^(0)]` at `rho=0.8, r=2`); `E[T_FJ^(1)]`
-   peaks at +1.37%. In the published single-replica table the max was 1.16%,
-   which is what made "< 1.2%" true. The claim needs to be relaxed (e.g. "< 2%")
-   or restated per-approximation.
+   largest error is **+1.73%** (`E[T_FJ^(0)]` at `rho=0.8, r=2`); `E[T_FJ^(1)]`
+   peaks at +1.38% (same cell) and `E[T_FJ]` at +0.57%. In the published
+   single-replica table the max was 1.16%, which is what made "< 1.2%" true. The
+   claim needs to be relaxed (e.g. "< 2%") or restated per-approximation — mean
+   |error| is **0.17% / 0.61% / 0.36%** for `E[T_FJ]` / `E[T_FJ^(0)]` /
+   `E[T_FJ^(1)]`.
 2. **Which approximation "wins" changes.** Bold counts shift from
    `E[T_FJ]` 3 / `E[T_FJ^(0)]` 6 / `E[T_FJ^(1)]` 3 in the published table to
-   **`E[T_FJ]` 8 / `E[T_FJ^(0)]` 2 / `E[T_FJ^(1)]` 2**. Under the multi-replica
-   reference, the *simplest* interpolation (eq. 6) is most accurate in 8 of 12
+   **`E[T_FJ]` 9 / `E[T_FJ^(0)]` 2 / `E[T_FJ^(1)]` 1**. Under the multi-replica
+   reference, the *simplest* interpolation (eq. 6) is most accurate in 9 of 12
    cells. Any text asserting the enhanced approximations are the most accurate
    needs revisiting.
 
-   Caveat worth stating in the paper: in **6 of 12 cells** (`rho=0.8, r=8`;
-   all of `rho=0.9, r∈{4,8}`; all of `rho=0.95`) the spread among the three
-   approximations is *smaller than the CI half-width* and all three lie inside
-   the simulation CI — so at high load the bolding ranks differences the
-   simulation cannot resolve.
+   Caveat worth stating in the paper: in **4 of 12 cells** (`rho=0.9, r=8` and
+   all of `rho=0.95`) the spread among the three approximations is *smaller than
+   the CI half-width* and all three lie inside the simulation CI — so at high
+   load the bolding ranks differences the simulation cannot resolve. (With 5
+   replicas this was 6 of 12; the tighter 10-replica CI resolves two more cells,
+   `rho=0.8, r=8` and `rho=0.9, r=4`.)
 
 ## Two findings worth reconciling before publication
 
@@ -134,24 +168,32 @@ CIs) are reproduced *exactly* — to the third decimal — by a **single seed (4
 | 0.95, 2 | 20.260 ± 0.012 | 20.260 ± 0.012 |
 
 The normal-approximation CI ignores the strong autocorrelation of consecutive
-response times and is far too tight near saturation. A **correct 5-seed t-CI**
-(what the text describes, produced by the default run) is much wider and honest:
+response times and is far too tight near saturation. A **correct multi-seed
+t-CI** is much wider and honest — and going from 5 to 10 replicas roughly halves
+it:
 
-| rho | published CI | correct 5-seed t-CI |
-|---|---|---|
-| 0.4  | ±0.001 | ±0.001 |
-| 0.8  | ±0.003 | ±0.019 |
-| 0.9  | ±0.006 | ±0.083 |
-| 0.95 | ±0.012 | ±0.295 |
+| rho | published CI | 5-seed t-CI | **10-seed t-CI (current)** |
+|---|---|---|---|
+| 0.4  | ±0.001 | ±0.001 | **±0.001** |
+| 0.8  | ±0.003 | ±0.019 | **±0.008** |
+| 0.9  | ±0.006 | ±0.083 | **±0.039** |
+| 0.95 | ±0.012 | ±0.295 | **±0.149** |
+
+The 10-seed reduction (~50–57%) beats the ~42% that the `t`/`sqrt(k)` change
+alone predicts, because the five added replicas also happened to lower the
+replica-to-replica sample std. The interval is still an order of magnitude wider
+than the published normal-approximation one at `rho=0.95` — that gap is the
+autocorrelation the normal CI ignores, and no number of replicas removes it.
 
 Under the correct protocol the grand-mean `T_sim` also shifts slightly (single
 seed 42 runs a touch high), which nudges a couple of approximation errors above
-the "< 1.2%" claim (e.g. LH at rho=0.8, r=2: +1.71% vs the published +1.16%),
+the "< 1.2%" claim (e.g. LH at rho=0.8, r=2: +1.73% vs the published +1.16%),
 though every approximation still lies within the honest simulation CI at
-moderate-to-high load. **Either regenerate Table 1 with the 5-seed t-CI protocol
-the text describes, or change the text to match the single-seed method used.**
+`rho=0.95`. **Either regenerate Table 1 with the multi-seed t-CI protocol the
+text describes, or change the text to match the single-seed method used.**
 
-> **Resolved:** regenerated with the 5-seed t-CI protocol — this is update A in
+> **Resolved:** regenerated with the multi-seed t-CI protocol, now at 10 replicas
+> — this is update A in
 > [The final Table 1](#the-final-table-1-updates-a--b-applied) above.
 
 ### 2. `E[T_FJ^(1)]` column vs. eq. 14 as typeset
@@ -182,8 +224,8 @@ flagged:** eq. 23 is uniformly larger than eq. 14 — by the dropped term
 (mean +1.35%). The gap grows toward saturation and is *non-monotonic in `r`*,
 peaking at `r=4` (because `c2` peaks there and → 0 as `r → ∞`). Against
 simulation, the quadratic eq. 23 has mean |error| **0.36%** (more accurate in
-**9/12** cells) vs **1.11%** for eq. 14, which under-predicts systematically at
-moderate-to-heavy load (worst −2.99% at `rho=0.95, r=4`).
+**9/12** cells) vs **1.07%** for eq. 14, which under-predicts systematically at
+moderate-to-heavy load (worst −2.88% at `rho=0.95, r=4`).
 
 | rho, r | table `T_FJ^(1)` (repo quadratic, eq. 23) | eq. 14 as typeset (c2=0) |
 |---|---|---|
