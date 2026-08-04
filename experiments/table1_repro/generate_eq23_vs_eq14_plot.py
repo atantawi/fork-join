@@ -12,7 +12,8 @@ Two panels, both analytical (no simulation needed for the expressions):
       under-predicting at moderate-to-heavy load.
 
 Color encodes the entity (r), never rank; line style encodes the expression.
-T_sim is the cached 5-seed / 20M-job grand mean (correct t-CI protocol).
+T_sim is the cached multi-replica / 20M-job grand mean (correct t-CI protocol;
+currently 10 replicas -- whatever reproduce_table1.py has cached is used).
 
 Usage:  python generate_eq23_vs_eq14_plot.py
 Outputs: eq23_vs_eq14.png, eq23_vs_eq14.pdf
@@ -49,14 +50,29 @@ def eq14_first_order(lam, mu1, mu2, beta=BETA):
 
 
 def load_tsim():
+    """Grand mean over every cached 20M-job replication of each cell.
+
+    reproduce_table1.py caches one entry per replication, keyed
+    "<rho>,<r>|<n_jobs>|<warmup>|seed=<s>", so this picks up however many
+    replicas have been run (currently 10) without a hard-coded seed list.
+    """
     cache = json.load(open(CACHE_FILE))
 
     def tsim(rho, r):
-        key = f"{rho},{r}|20000000|500000|0,1,2,3,4"
-        m = cache[key]["per_seed_means"]
-        return sum(m) / len(m)
+        prefix = f"{rho},{r}|20000000|500000|seed="
+        means = [v["mean"] for k, v in cache.items() if k.startswith(prefix)]
+        if not means:
+            raise KeyError(f"no cached 20M replications for rho={rho}, r={r}; "
+                           "run reproduce_table1.py first")
+        return sum(means) / len(means)
 
     return tsim
+
+
+def n_replicas():
+    cache = json.load(open(CACHE_FILE))
+    return sum(1 for k in cache
+               if k.startswith(f"{RHO_VALUES[0]},{R_VALUES[0]}|20000000|500000|seed="))
 
 
 def main():
