@@ -19,11 +19,16 @@ Then rho = gamma/mu^* is the bottleneck utilization and r = mu2/mu1.
 
 Simulation protocol (paper Sec. results, line "20-million jobs ... 500-thousand
 ... five independent replicas ... t-distribution"):
-  20 M jobs, 500 K warmup, 5 independent seeds; T_sim is the grand mean over
+  20 M jobs, 500 K warmup, independent seeds; T_sim is the grand mean over
   seeds and the 95% CI half-width is t_{0.975, k-1} * s / sqrt(k) with s the
   sample std (ddof=1) of the per-seed means. This is the "independent
   replications" method -- the correct basis for a CI given the strong
   autocorrelation of consecutive response times near saturation.
+
+  The paper text says five replicas; the default here is k=10 to tighten the
+  interval (the t-quantile drop plus the extra sqrt(2) narrows the half-width
+  by ~42% at fixed replica spread). The paper text must then say ten, since
+  the generated caption reports the actual k.
 
 We drive the library simulate() once per seed (one continuous Lindley recursion,
 warmup discarded) -- the same routine used everywhere else in the repo. We do
@@ -35,8 +40,8 @@ Outputs (all in this directory):
   table1_errors.png/pdf-- relative-error figure
 
 Usage:
-  python reproduce_table1.py             # paper protocol: 20M jobs, 5 seeds (~15 min)
-  python reproduce_table1.py --quick     # 200K jobs, 5 seeds (smoke test, ~seconds)
+  python reproduce_table1.py             # paper protocol: 20M jobs, 10 seeds (~25 min cold)
+  python reproduce_table1.py --quick     # 200K jobs, 10 seeds (smoke test, ~seconds)
 """
 
 import argparse
@@ -65,7 +70,9 @@ BETA = 10.0
 # ---- Simulation protocol (paper) -------------------------------------------
 DEFAULT_N_JOBS = 20_000_000
 DEFAULT_WARMUP = 500_000
-DEFAULT_SEEDS = [0, 1, 2, 3, 4]
+# 10 replicas: the t-quantile drop (2.776 -> 2.262) plus the extra sqrt(2) in
+# sqrt(k) narrows the CI half-width by ~42% at fixed replica-to-replica spread.
+DEFAULT_SEEDS = list(range(10))
 
 # Student-t 0.975 quantiles by degrees of freedom (avoids a scipy dependency).
 T_975 = {1: 12.706205, 2: 4.302653, 3: 3.182446, 4: 2.776445, 5: 2.570582,
@@ -126,10 +133,43 @@ def grand_mean_and_ci(per_seed_means):
     return gm, half
 
 
+def seed_key(rho, r, n_jobs, warmup, seed):
+    """Cache key for one replication. Per-seed (not per-seed-list) so that
+    growing the replica count reuses the replications already run: simulate()
+    is deterministic in the seed, so a given (cell, n_jobs, warmup, seed) mean
+    is the same number regardless of which run produced it."""
+    return f"{rho},{r}|{n_jobs}|{warmup}|seed={seed}"
+
+
+def migrate_cache(cache):
+    """Expand legacy per-seed-list entries into per-seed entries, in place.
+
+    Legacy keys look like "0.4,2|20000000|500000|0,1,2,3,4" and carry a
+    per_seed_means list aligned with that seed list; only the first seed's
+    normal-approximation half-width was recorded.
+    """
+    migrated = 0
+    for key, entry in list(cache.items()):
+        if "|seed=" in key or "per_seed_means" not in entry:
+            continue
+        cell, n_jobs, warmup, _ = key.split("|")
+        rho, r = cell.split(",")
+        for i, (s, m) in enumerate(zip(entry["seeds"], entry["per_seed_means"])):
+            k = f"{rho},{r}|{n_jobs}|{warmup}|seed={s}"
+            if k not in cache:
+                cache[k] = {"mean": m,
+                            "normal_ci_hw": entry["normal_ci_hw"] if i == 0 else None}
+                migrated += 1
+        del cache[key]
+    if migrated:
+        print(f"  [cache] migrated {migrated} legacy replication(s) to per-seed keys")
+    return cache
+
+
 def load_cache():
     if os.path.exists(CACHE_FILE):
         with open(CACHE_FILE) as f:
-            return json.load(f)
+            return migrate_cache(json.load(f))
     return {}
 
 
@@ -138,29 +178,32 @@ def simulate_cell(rho, r, n_jobs, warmup, seeds, cache):
 
     normal_ci_hw is the single-run normal-approximation half-width from the
     first seed (used only for --paper-exact, to mirror the published table).
+    Replications are cached individually, so only seeds not already on disk run.
     """
-    key = f"{rho},{r}|{n_jobs}|{warmup}|{','.join(map(str, seeds))}"
-    entry = cache.get(key)
-    if entry:
-        print(f"  [cache] rho={rho} r={r}")
-        return entry["per_seed_means"], entry["normal_ci_hw"]
-
     lam, mu2 = rho * MU1, r * MU1
-    print(f"  [run]   rho={rho} r={r} (lam={lam}, mu1={MU1}, mu2={mu2}): "
-          f"{len(seeds)} seeds x {n_jobs:,} jobs ...", flush=True)
-    t0 = time.time()
-    means, normal_ci_hw = [], None
-    for s in seeds:
-        res = simulate(lam, MU1, mu2, n_jobs=n_jobs, warmup=warmup, seed=s)
-        means.append(res.mean_response_time)
-        if normal_ci_hw is None:
-            normal_ci_hw = (res.ci_95[1] - res.ci_95[0]) / 2
-    cache[key] = {"n_jobs": n_jobs, "warmup": warmup, "seeds": list(seeds),
-                  "per_seed_means": means, "normal_ci_hw": normal_ci_hw}
-    with open(CACHE_FILE, "w") as f:
-        json.dump(cache, f, indent=2)
-    print(f"          done in {time.time() - t0:.0f}s  "
-          f"per-seed={['%.4f' % m for m in means]}", flush=True)
+    todo = [s for s in seeds if seed_key(rho, r, n_jobs, warmup, s) not in cache]
+    if todo:
+        print(f"  [run]   rho={rho} r={r} (lam={lam}, mu1={MU1}, mu2={mu2}): "
+              f"{len(todo)} of {len(seeds)} seeds {todo} x {n_jobs:,} jobs ...",
+              flush=True)
+        t0 = time.time()
+        for s in todo:
+            res = simulate(lam, MU1, mu2, n_jobs=n_jobs, warmup=warmup, seed=s)
+            cache[seed_key(rho, r, n_jobs, warmup, s)] = {
+                "mean": res.mean_response_time,
+                "normal_ci_hw": (res.ci_95[1] - res.ci_95[0]) / 2,
+            }
+            with open(CACHE_FILE, "w") as f:   # checkpoint after every replica
+                json.dump(cache, f, indent=2)
+        print(f"          done in {time.time() - t0:.0f}s", flush=True)
+    else:
+        print(f"  [cache] rho={rho} r={r}")
+
+    entries = [cache[seed_key(rho, r, n_jobs, warmup, s)] for s in seeds]
+    means = [e["mean"] for e in entries]
+    normal_ci_hw = next((e["normal_ci_hw"] for e in entries
+                         if e["normal_ci_hw"] is not None), float("nan"))
+    print(f"          per-seed={['%.4f' % m for m in means]}", flush=True)
     return means, normal_ci_hw
 
 

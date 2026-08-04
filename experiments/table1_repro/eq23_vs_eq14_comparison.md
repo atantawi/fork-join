@@ -66,26 +66,28 @@ required to compare them. Parameterization matches Table 1:
 $\mu_1 = 1$, $\mu_2 = r$, $\lambda = \rho\mu_1$, $\beta = 10$, over the grid
 $\rho \in \{0.4, 0.8, 0.9, 0.95\}$ and $r \in \{2, 4, 8\}$.
 
-For accuracy context only, $T_\text{sim}$ is the 5-seed / 20M-job grand mean
-from the cached results (`table1_results.json`), the "correct" independent-
-replications protocol from Finding 1.
+For accuracy context only, $T_\text{sim}$ is the **10-replica** / 20M-job grand
+mean from the cached results (`table1_results.json`), the "correct" independent-
+replications protocol from Finding 1. (The error columns below moved slightly
+when the reference went from 5 to 10 replicas; the two expressions themselves,
+their gap, and $c_2$ are analytical and did not change.)
 
 ## Data / Table
 
 | $\rho$ | $r$ | $T_{LHe}$ (eq. 23) | $T_{FJ}^{(1)}$ (eq. 14, $c_2{=}0$) | gap | rel. gap | $c_2$ | $T_\text{sim}$ | eq. 23 err | eq. 14 err |
 |----|---|------|------|------|------|------|------|------|------|
-| 0.40 | 2 | 1.8248 | 1.8189 | 0.0059 | +0.32% | 0.0220 | 1.8144 | **+0.57%** | +0.25% |
-| 0.40 | 4 | 1.7045 | 1.6965 | 0.0081 | +0.48% | 0.0303 | 1.7021 | **+0.14%** | −0.33% |
-| 0.40 | 8 | 1.6760 | 1.6729 | 0.0031 | +0.18% | 0.0115 | 1.6757 | **+0.01%** | −0.17% |
-| 0.80 | 2 | 5.1506 | 5.0802 | 0.0703 | +1.38% | 0.0220 | 5.0811 | +1.37% | **−0.02%** |
-| 0.80 | 4 | 5.0258 | 4.9288 | 0.0970 | +1.97% | 0.0303 | 5.0145 | **+0.23%** | −1.71% |
-| 0.80 | 8 | 5.0047 | 4.9679 | 0.0368 | +0.74% | 0.0115 | 5.0036 | **+0.02%** | −0.71% |
-| 0.90 | 2 | 10.1502 | 9.9722 | 0.1780 | +1.79% | 0.0220 | 10.0505 | **+0.99%** | −0.78% |
-| 0.90 | 4 | 10.0227 | 9.7773 | 0.2454 | +2.51% | 0.0303 | 10.0113 | **+0.12%** | −2.34% |
-| 0.90 | 8 | 10.0035 | 9.9103 | 0.0932 | +0.94% | 0.0115 | 10.0055 | **−0.02%** | −0.95% |
-| 0.95 | 2 | 20.1528 | 19.7562 | 0.3966 | +2.01% | 0.0220 | 20.0959 | **+0.28%** | −1.69% |
-| 0.95 | 4 | 20.0212 | 19.4743 | 0.5469 | +2.81% | 0.0303 | 20.0746 | **−0.27%** | −2.99% |
-| 0.95 | 8 | 20.0030 | 19.7953 | 0.2077 | +1.05% | 0.0115 | 20.0716 | **−0.34%** | −1.38% |
+| 0.40 | 2 | 1.8248 | 1.8189 | 0.0059 | +0.32% | 0.0220 | 1.8140 | +0.59% | **+0.27%** |
+| 0.40 | 4 | 1.7045 | 1.6965 | 0.0081 | +0.48% | 0.0303 | 1.7018 | **+0.16%** | −0.31% |
+| 0.40 | 8 | 1.6760 | 1.6729 | 0.0031 | +0.18% | 0.0115 | 1.6754 | **+0.03%** | −0.15% |
+| 0.80 | 2 | 5.1506 | 5.0802 | 0.0703 | +1.38% | 0.0220 | 5.0803 | +1.38% | **−0.00%** |
+| 0.80 | 4 | 5.0258 | 4.9288 | 0.0970 | +1.97% | 0.0303 | 5.0137 | **+0.24%** | −1.69% |
+| 0.80 | 8 | 5.0047 | 4.9679 | 0.0368 | +0.74% | 0.0115 | 5.0029 | **+0.04%** | −0.70% |
+| 0.90 | 2 | 10.1502 | 9.9722 | 0.1780 | +1.78% | 0.0220 | 10.0495 | +1.00% | **−0.77%** |
+| 0.90 | 4 | 10.0227 | 9.7773 | 0.2454 | +2.51% | 0.0303 | 10.0102 | **+0.12%** | −2.33% |
+| 0.90 | 8 | 10.0035 | 9.9103 | 0.0932 | +0.94% | 0.0115 | 10.0045 | **−0.01%** | −0.94% |
+| 0.95 | 2 | 20.1528 | 19.7562 | 0.3966 | +2.01% | 0.0220 | 20.0732 | **+0.40%** | −1.58% |
+| 0.95 | 4 | 20.0212 | 19.4743 | 0.5469 | +2.81% | 0.0303 | 20.0518 | **−0.15%** | −2.88% |
+| 0.95 | 8 | 20.0030 | 19.7953 | 0.2077 | +1.05% | 0.0115 | 20.0489 | **−0.23%** | −1.26% |
 
 Bold marks the more accurate of the two for that row.
 
@@ -106,8 +108,8 @@ moderate-to-heavy load, worst at $\rho=0.95$, $r=4$. Regenerate with
 | Metric | Value |
 |---|---|
 | Pairwise rel. gap (eq. 23 vs eq. 14) | min +0.18%, max +2.81%, mean +1.35% |
-| \|err\| vs sim — eq. 23 (quadratic) | min 0.01%, max 1.37%, **mean 0.36%** |
-| \|err\| vs sim — eq. 14 ($c_2{=}0$)  | min 0.02%, max 2.99%, **mean 1.11%** |
+| \|err\| vs sim — eq. 23 (quadratic) | min 0.01%, max 1.38%, **mean 0.36%** |
+| \|err\| vs sim — eq. 14 ($c_2{=}0$)  | min 0.00%, max 2.88%, **mean 1.07%** |
 | More accurate | eq. 23 in **9/12**, eq. 14 in 3/12 |
 
 ## Conclusion
@@ -128,9 +130,9 @@ moderate-to-heavy load, worst at $\rho=0.95$, $r=4$. Regenerate with
 
 4. **The quadratic term matters for accuracy.** It anchors the heavy-traffic
    constant $h(r)$. Without it (eq. 14), the approximation systematically
-   **under-predicts** at moderate-to-heavy load — 9 of 12 cells go negative,
-   worst at $\rho = 0.95$, $r = 4$ (−2.99%). Eq. 23 cuts the mean absolute error
-   from 1.11% to 0.36% and wins in 9 of 12 cases.
+   **under-predicts** at moderate-to-heavy load — 11 of 12 cells go negative,
+   worst at $\rho = 0.95$, $r = 4$ (−2.88%). Eq. 23 cuts the mean absolute error
+   from 1.07% to 0.36% and wins in 9 of 12 cases.
 
 5. **Resolution of issue #6, Finding 2.** The table's `E[T_{FJ}^{(1)}]` column
    is the quadratic eq. 23; eq. 14 as *typeset* in the external paper is missing
@@ -148,6 +150,7 @@ from forkjoin import mean_response_time_lh_enhanced   # eq. 23 (quadratic)
 PY
 ```
 
-The `t_fj1_literal_eq14` field in `table1_results.json` (produced by
-`reproduce_table1.py`) stores the eq. 14 value for every cell; `t_fj1` stores
-eq. 23.
+`reproduce_table1.py` computes the literal eq. 14 per cell as
+`t_fj1_literal_eq14` (function `paper_eq14_literal`) alongside `t_fj1` (eq. 23)
+and prints the pair; `table1_results.json` itself holds only the cached
+per-replication simulation means, not these derived columns.
