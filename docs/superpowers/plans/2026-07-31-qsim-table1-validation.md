@@ -1693,7 +1693,7 @@ cat > README.md <<'MARKDOWN'
 # Validating Table 1 with qsim-service
 
 Re-measures the 16 simulated cells of **Table 1** (`\label{tab:approx-results}`) with an
-**independent** discrete-event simulator — [qsim-service](https://github.com/atantawi/qsim-service),
+**independent** discrete-event simulator — [qsim-service](https://github.com/modeling-analysis/qsim-service),
 an HTTP/JSON wrapper around the headless JMT engine — and reports whether the two
 simulators agree, cell by cell, within their confidence intervals.
 
@@ -1718,7 +1718,7 @@ Two deliberate departures, both forced by measured service behaviour:
 1. **No convergence stopping.** Requesting `minSamples: 1e6` with `precision: 0.005`
    produced a run of **10,880 samples** that still reported `success: true` while its
    actual relative half-width was 7.9%. `minSamples` is accepted by the API and never
-   reaches JMT — filed as [qsim-service#10](https://github.com/atantawi/qsim-service/issues/10).
+   reaches JMT — filed as [qsim-service#10](https://github.com/modeling-analysis/qsim-service/issues/10).
    Run length here is verified by `samplesAnalyzed == N` and by nothing else.
 2. **No warm-up.** qsim exposes no warm-up knob and `samplesDiscarded` is always 0,
    whereas the paper discards 500 K jobs. Rather than assume this away,
@@ -1867,7 +1867,7 @@ over HTTP) and reporting cell-by-cell CI overlap.
 
 Design: \`docs/superpowers/specs/2026-07-31-qsim-table1-validation-design.md\`
 
-Constrained by https://github.com/atantawi/qsim-service/issues/10: \`minSamples\` never
+Constrained by https://github.com/modeling-analysis/qsim-service/issues/10: \`minSamples\` never
 reaches JMT and \`success\` does not report convergence, so only fixed-length runs are
 used and run length is verified via \`samplesAnalyzed\`."
 
@@ -1882,7 +1882,7 @@ artifacts. Nothing in `forkjoin/` changes and `pyproject.toml` gains no dependen
 the client is stdlib `urllib`.
 
 See `experiments/table1_qsim/README.md` for the agreement verdict, the protocol
-departures forced by atantawi/qsim-service#10, and why the two simulators' per-run
+departures forced by modeling-analysis/qsim-service#10, and why the two simulators' per-run
 CIs are not comparable objects.
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)

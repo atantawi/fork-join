@@ -1,7 +1,7 @@
 # Validating Table 1 with qsim-service
 
 Re-measures the 16 simulated cells of **Table 1** (`\label{tab:approx-results}`) with an
-**independent** discrete-event simulator — [qsim-service](https://github.com/atantawi/qsim-service),
+**independent** discrete-event simulator — [qsim-service](https://github.com/modeling-analysis/qsim-service),
 an HTTP/JSON wrapper around the headless JMT engine — and reports whether the two
 simulators agree, cell by cell, within their confidence intervals.
 
@@ -33,7 +33,7 @@ Two deliberate departures, both forced by measured service behaviour:
 
 1. **No convergence stopping.** Two upstream bugs originally forced this and are now
    **fixed** in qsim-service 0.2.0: `minSamples` never reached JMT
-   ([#10](https://github.com/atantawi/qsim-service/issues/10), fixed in `395ecfc`) and the
+   ([#10](https://github.com/modeling-analysis/qsim-service/issues/10), fixed in `395ecfc`) and the
    measure `alpha` was written as its complement, which made JMT return a negated
    one-sided quantile — so the stopping rule passed unconditionally and every interval came
    back ~17% too narrow (#12, fixed in `df45cd1`). Together they produced a run of **10,880

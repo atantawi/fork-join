@@ -13,7 +13,7 @@ against discrete-event simulation, over `rho in {0.4, 0.8, 0.9, 0.95}` and
 `experiments/table1_repro/reproduce_table1.py`.
 
 This experiment re-measures the same 16 cells with an **independent** discrete-event
-simulator — [qsim-service](https://github.com/atantawi/qsim-service), an HTTP/JSON
+simulator — [qsim-service](https://github.com/modeling-analysis/qsim-service), an HTTP/JSON
 wrapper around the headless JMT engine — and asks a single question:
 
 > Do the two independent simulators agree, cell by cell, within their confidence
