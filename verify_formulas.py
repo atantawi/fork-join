@@ -1,6 +1,7 @@
 """Verify the formulas in approximation-comparison.md"""
 import sys
-sys.path.insert(0, '/Users/tantawi/Projects/fork-join')
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from forkjoin.analytical import (
     upper_bound_independent,

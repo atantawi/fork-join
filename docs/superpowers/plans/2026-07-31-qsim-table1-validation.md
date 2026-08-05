@@ -1744,7 +1744,7 @@ Start the service (it is never started or stopped by these scripts):
 
 ```bash
 # podman/docker -- the authoritative runtime (temurin 17-jre, the tested JVM)
-cd ~/Projects/quantum/qsim-service
+cd ~/Projects/modeling-analysis/qsim-service
 podman build -t qsim-service:0.1.0 .
 podman run -d --rm --name qsim -p 8080:8080 qsim-service:0.1.0
 
@@ -1822,7 +1822,7 @@ Spec §9: the grid's timing is measured inside a Linux VM, so it is not natively
 comparable. Start a local-JVM instance on a different port and re-run two cells:
 
 ```bash
-cd ~/Projects/quantum/qsim-service
+cd ~/Projects/modeling-analysis/qsim-service
 QSIM_PORT=8081 java -cp "target/qsim-service.jar:target/dependency/*:lib/JMT-singlejar-1.4.0.jar" \
     qsim.http.App &
 cd -
@@ -1840,7 +1840,7 @@ podman-to-local ratio explicitly.
 - [ ] **Step 5: Commit artifacts and the README**
 
 ```bash
-cd /Users/tantawi/Projects/fork-join
+cd /Users/tantawi/Projects/modeling-analysis/fork-join
 git add experiments/table1_qsim/README.md \
         experiments/table1_qsim/qsim_results.json \
         experiments/table1_qsim/table1_qsim_results.json \
@@ -1859,7 +1859,7 @@ transient-bias check, and the podman-vs-local-JVM timing caveat."
 - [ ] **Step 6: Open the issue and the PR**
 
 ```bash
-cd /Users/tantawi/Projects/fork-join
+cd /Users/tantawi/Projects/modeling-analysis/fork-join
 gh issue create --title "Validate Table 1's simulation numbers with an independent simulator" \
   --body "Table 1's simulated sojourn times come from this repo's Lindley-recursion
 simulator. This tracks re-measuring the same 16 cells with qsim-service (headless JMT

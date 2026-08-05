@@ -134,7 +134,7 @@ interval is what `--transient-check` tests against.
 
 ```bash
 # podman/docker -- the authoritative runtime (temurin 17-jre, the tested JVM)
-cd ~/Projects/quantum/qsim-service
+cd ~/Projects/modeling-analysis/qsim-service
 podman build -t qsim-service:0.2.0 .
 podman run -d --name qsim -p 8080:8080 qsim-service:0.2.0
 
@@ -206,7 +206,7 @@ therefore not a source of numerical difference.
 To reproduce:
 
 ```bash
-cd ~/Projects/quantum/qsim-service     # must be at df45cd1 or later
+cd ~/Projects/modeling-analysis/qsim-service     # must be at df45cd1 or later
 mvn -DskipTests package                # only if target/qsim-service.jar predates that
 QSIM_PORT=8081 java -cp "target/qsim-service.jar:target/dependency/*:lib/JMT-singlejar-1.4.0.jar" \
     qsim.http.App &
