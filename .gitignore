@@ -23,3 +23,9 @@ docs/paper/compact_table/sim_cache.json
 
 # Table 1 reproduction sim cache (regenerable)
 experiments/table1_repro/table1_results.json
+
+# Publisher PDFs of the cited literature. Kept locally under docs/references/
+# but never committed: they are copyrighted and redistributing them from a
+# public repo is not ours to do. cite.bib stays tracked and is the real index —
+# fetch the papers from their DOIs.
+docs/references/*.pdf
