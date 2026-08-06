@@ -333,3 +333,9 @@ All three methods extend naturally: $T_{\text{UL}}$ via inclusion-exclusion boun
 [5] M. Squillante and A. N. Tantawi, "QC/HPC Resource Allocation/Scheduling," Technical Report, IBM Research, January 2026. (Appendix A.)
 
 [6] S. Varma and A. M. Makowski, "Interpolation approximations for symmetric fork-join queues," *Performance Evaluation*, vol. 20, no. 1, pp. 245–265, 1994.
+
+---
+
+## License
+
+Apache License 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE).
